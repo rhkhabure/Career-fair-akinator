@@ -439,11 +439,20 @@ programs = [
 
 LIKERT = ["Definitely Yes", "Probably Yes", "Neutral", "Probably No", "Definitely No"]
 
+
+# ─────────────────────────────────────────────────────────────
+# QUESTION BANK
+# Rule: one sentence, no em-dashes, no parenthetical explanation.
+# Discriminating power comes from the tags and followup chains.
+# ─────────────────────────────────────────────────────────────
+
+LIKERT = ["Definitely Yes", "Probably Yes", "Neutral", "Probably No", "Definitely No"]
+
 questions = {
 
     # ── STUDY LEVEL ───────────────────────────────────────────
     "q_postgraduate": {
-        "text": "Is the qualification you are currently working toward your second university degree — one that builds on top of a degree you have already finished?",
+        "text": "Did you celebrate finishing a university degree before you started this programme?",
         "tags": ["postgraduate"],
         "responses": LIKERT,
         "followups": {
@@ -453,7 +462,7 @@ questions = {
     },
 
     "q_phd": {
-        "text": "Are you working toward the highest academic qualification possible — one that requires you to produce original research that adds completely new knowledge to your field?",
+        "text": "Is your goal to produce completely original research that adds new knowledge nobody has published before?",
         "tags": ["dissertation"],
         "responses": LIKERT,
         "followups": {
@@ -473,7 +482,7 @@ questions = {
 
     # ── BROAD FIRST-FORK SIGNALS ──────────────────────────────
     "q_business": {
-        "text": "When you picture your future career, do you see yourself inside a company — managing teams, steering strategy, or driving a business forward?",
+        "text": "Do you picture yourself in a company setting — managing teams, steering strategy, or running a business?",
         "tags": ["business"],
         "responses": LIKERT,
         "followups": {
@@ -484,7 +493,7 @@ questions = {
     },
 
     "q_coding": {
-        "text": "Do you regularly write code — not just use software, but actually build it yourself as part of your coursework?",
+        "text": "Do you write code yourself as a regular part of your coursework?",
         "tags": ["coding"],
         "responses": LIKERT,
         "followups": {
@@ -495,7 +504,7 @@ questions = {
     },
 
     "q_lab_work": {
-        "text": "Is a significant chunk of your time spent in an actual physical laboratory — handling chemicals, running experiments, or using scientific equipment?",
+        "text": "Do you regularly spend time in a physical laboratory handling equipment or running experiments?",
         "tags": ["lab_work"],
         "responses": LIKERT,
         "followups": {
@@ -506,7 +515,7 @@ questions = {
     },
 
     "q_people_focused": {
-        "text": "Is understanding how human beings think, feel, interact, or organise themselves the main lens through which you study your field?",
+        "text": "Is understanding how people think, feel, or organise themselves the core of your studies?",
         "tags": ["social_science"],
         "responses": LIKERT,
         "followups": {
@@ -517,7 +526,7 @@ questions = {
     },
 
     "q_creative": {
-        "text": "Is producing something creative — a film, animation, article, or visual work — literally part of how you are graded?",
+        "text": "Is producing creative work like a film, animation, or article part of how you are graded?",
         "tags": ["creative"],
         "responses": LIKERT,
         "followups": {
@@ -528,7 +537,7 @@ questions = {
 
     # ── BUSINESS: Finance vs Accounting ──────────────────────
     "q_numbers_or_people": {
-        "text": "In your business studies, do you spend more time working with numbers and financial data than with people and leadership concepts?",
+        "text": "Do you spend more time working with financial data than with people and leadership concepts?",
         "tags": ["quantitative"],
         "responses": LIKERT,
         "followups": {
@@ -540,7 +549,7 @@ questions = {
     },
 
     "q_invest_or_audit": {
-        "text": "Do you spend more time studying how to GROW money — picking investments, valuing companies, and managing portfolios — than verifying that financial records are accurate?",
+        "text": "Is your financial focus more on growing money through investments than on verifying that records are accurate?",
         "tags": ["investment_focus"],
         "responses": LIKERT,
         "followups": {
@@ -550,7 +559,7 @@ questions = {
     },
 
     "q_finance": {
-        "text": "Do concepts like equity markets, bond pricing, derivatives, or portfolio theory come up regularly in your coursework?",
+        "text": "Do equity markets, bond pricing, or portfolio theory come up regularly in your studies?",
         "tags": ["finance_focus", "market_analysis"],
         "responses": LIKERT,
         "followups": {
@@ -559,7 +568,7 @@ questions = {
     },
 
     "q_accounting": {
-        "text": "Is a core part of your studies learning how to prepare, verify, and report an organisation's financial statements accurately?",
+        "text": "Is a core skill you are building the ability to prepare and verify an organisation's financial statements?",
         "tags": ["audit_focus", "financial_reporting", "cpa_track"],
         "responses": LIKERT,
         "followups": {
@@ -568,14 +577,14 @@ questions = {
     },
 
     "q_audit_focus": {
-        "text": "Do you study how to audit — checking that financial records are truthful, compliant with regulations, and free from misrepresentation?",
+        "text": "Do you study how to audit financial records for accuracy, compliance, and freedom from fraud?",
         "tags": ["audit_focus", "tax_focus"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_leadership": {
-        "text": "Is a central theme of your programme how to lead people — motivating teams, setting strategy, or driving organisational change?",
+        "text": "Is leading people, setting strategy, and driving organisational change a central theme of your programme?",
         "tags": ["leadership_focus"],
         "responses": LIKERT,
         "followups": {
@@ -585,35 +594,35 @@ questions = {
     },
 
     "q_global_focus": {
-        "text": "Do your studies regularly zoom out to an international scale — comparing countries, analysing global markets, or studying cross-border policy?",
+        "text": "Do your studies regularly take an international angle, comparing countries or analysing global markets?",
         "tags": ["global_focus"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_executive_focus": {
-        "text": "Are most of your classmates already deep into professional careers — rather than studying straight from completing their first degree?",
+        "text": "Are most of your classmates already deep in professional careers rather than fresh graduates?",
         "tags": ["executive_focus"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_executive_research": {
-        "text": "Is your research anchored in a real organisation you already work in — solving an actual management problem rather than a purely theoretical one?",
+        "text": "Is your research solving a real problem in an organisation you already work in?",
         "tags": ["executive_research"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_org_psychology": {
-        "text": "Do you study why organisations succeed or struggle from a human angle — workplace culture, motivation, resistance to change, or group dynamics?",
+        "text": "Do you study workplace culture, motivation, or how organisations manage change?",
         "tags": ["org_development", "organizational_psychology"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_hospitality": {
-        "text": "Does your programme specifically prepare you to run hotels, restaurants, or similar hospitality venues — managing rooms, kitchens, events, and the guest experience?",
+        "text": "Does your programme prepare you to run hotels, restaurants, or similar hospitality venues?",
         "tags": ["hospitality_ops", "food_beverage_management", "hotel_operations"],
         "responses": LIKERT,
         "followups": {},
@@ -621,7 +630,7 @@ questions = {
 
     # ── TECH: SE vs DS vs IS&T vs AI vs ACT ──────────────────
     "q_build_or_analyse": {
-        "text": "When you write code, is your main goal BUILDING something people actually use — an app, platform, or system — rather than analysing datasets or training prediction models?",
+        "text": "When you code, is your main goal building something people use rather than analysing data or training models?",
         "tags": ["build_user_products", "software_architecture"],
         "responses": LIKERT,
         "followups": {
@@ -633,7 +642,7 @@ questions = {
     },
 
     "q_software_style": {
-        "text": "Do you spend time thinking about software engineering disciplines — clean architecture, version control strategies, automated testing, or deployment pipelines?",
+        "text": "Do you think about software engineering practices like clean architecture, version control, and automated testing?",
         "tags": ["software_architecture", "testing_pipelines", "ci_cd"],
         "responses": LIKERT,
         "followups": {
@@ -642,7 +651,7 @@ questions = {
     },
 
     "q_statistics_models": {
-        "text": "Do you regularly fit statistical models or train machine learning algorithms — splitting data, tuning hyperparameters, and evaluating prediction performance?",
+        "text": "Do you regularly train machine learning models or fit statistical models to data?",
         "tags": ["statistical_modeling", "ml_algorithms"],
         "responses": LIKERT,
         "followups": {
@@ -652,7 +661,7 @@ questions = {
     },
 
     "q_health_data_or_general": {
-        "text": "Is your data work specifically about health outcomes — disease rates, patient data, or how public health interventions work — rather than general business or technology data?",
+        "text": "Is your data work specifically about health outcomes like disease rates or patient data?",
         "tags": ["public_health_focus", "population_health"],
         "responses": LIKERT,
         "followups": {
@@ -662,28 +671,28 @@ questions = {
     },
 
     "q_enterprise_it": {
-        "text": "Is a core focus of your computing work aligning IT systems with business needs — ERP systems, IT governance, or enterprise architecture — rather than building consumer-facing products?",
+        "text": "Is your computing work about aligning IT systems with business needs like ERP or IT governance?",
         "tags": ["enterprise_systems", "business_it_alignment", "erp_systems"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_physical_ai": {
-        "text": "Does your AI or computing work extend into the physical world — controlling robots, reading sensor data, or making machines move and respond to their environment?",
+        "text": "Does your AI work involve physical machines like robots or systems that respond to sensor data?",
         "tags": ["robotics_lab", "control_systems", "autonomous_systems"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_hardware": {
-        "text": "Do you work with actual physical computing components — circuit boards, microcontrollers, or embedded systems that interface with hardware directly?",
+        "text": "Do you work directly with physical components like circuit boards or microcontrollers?",
         "tags": ["embedded_systems", "hardware_integration", "microcontroller_work"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_security": {
-        "text": "Do you study how to attack or defend computer systems — penetration testing, cryptography, or protecting networks from intrusion?",
+        "text": "Do you study how to attack or defend computer systems through penetration testing or cryptography?",
         "tags": ["cybersecurity_focus", "penetration_testing", "cryptography"],
         "responses": LIKERT,
         "followups": {
@@ -693,7 +702,7 @@ questions = {
 
     # ── SOCIAL SCIENCE: Psychology vs CJS vs IR vs Sociology ─
     "q_mind_or_society": {
-        "text": "Is your main focus the individual mind — understanding a person's thoughts, emotions, and mental health — rather than how groups, institutions, or societies function?",
+        "text": "Is your focus more on the individual mind and mental health than on how groups or institutions function?",
         "tags": ["mental_health_focus", "brain_behaviour"],
         "responses": LIKERT,
         "followups": {
@@ -705,14 +714,14 @@ questions = {
     },
 
     "q_therapy_type": {
-        "text": "In your clinical or therapeutic work, is your focus on RELATIONSHIPS — working with couples or families as a system — rather than treating individuals in isolation?",
+        "text": "Does your therapeutic work focus on relationships and families rather than individual clients?",
         "tags": ["family_systems_therapy", "couples_therapy", "relational_focus"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_society_angle": {
-        "text": "Is your social science work more about how power, laws, and institutions shape society — like politics, justice, or diplomacy — than about the inner workings of individual minds?",
+        "text": "Is your social science work more about power, law, and institutions than about individual psychology?",
         "tags": ["politics", "crime_focus", "policy_focus"],
         "responses": LIKERT,
         "followups": {
@@ -722,7 +731,7 @@ questions = {
     },
 
     "q_justice": {
-        "text": "Is the legal system, crime, punishment, or what happens when society tries to correct past wrongs a central theme of your studies?",
+        "text": "Is crime, law enforcement, or the legal system a central theme in your studies?",
         "tags": ["crime_focus", "law_enforcement", "legal_system"],
         "responses": LIKERT,
         "followups": {
@@ -732,7 +741,7 @@ questions = {
     },
 
     "q_politics": {
-        "text": "Do you spend a lot of your study time analysing how power operates — between governments, states, or international institutions?",
+        "text": "Do you study how power operates between governments, states, or international bodies?",
         "tags": ["politics", "diplomacy_focus", "geopolitics"],
         "responses": LIKERT,
         "followups": {
@@ -741,29 +750,29 @@ questions = {
     },
 
     "q_policy_focus": {
-        "text": "Do you study how governments design and implement policy — sitting in simulated negotiations, drafting policy briefs, or critiquing governance decisions?",
+        "text": "Do you draft policy briefs, simulate negotiations, or critique governance decisions as part of your studies?",
         "tags": ["policy_focus"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_qualitative": {
-        "text": "Is most of your research done through interviews, observation, or interpreting texts and meaning — rather than running statistical tests on numerical data?",
+        "text": "Is most of your research done through interviews and observation rather than numerical data?",
         "tags": ["qualitative"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_field_work": {
-        "text": "Does your programme regularly take you off-campus — into communities, courts, hospitals, newsrooms, or fieldwork sites as part of your formal learning?",
+        "text": "Does your programme take you off-campus into communities, courts, or other real-world sites?",
         "tags": ["field_work"],
         "responses": LIKERT,
         "followups": {},
     },
 
-    # ── HEALTH SCIENCES: Nursing vs Pharmacy vs Biochem vs Epi
+    # ── HEALTH SCIENCES ───────────────────────────────────────
     "q_health_or_chemistry": {
-        "text": "Is the chemistry you study primarily about biological systems and living things — like drugs, cells, and enzymes — rather than industrial or purely analytical chemistry?",
+        "text": "Is the chemistry you study focused on biological systems like drugs or cells rather than industrial chemistry?",
         "tags": ["chemical", "healthcare_focus"],
         "responses": LIKERT,
         "followups": {
@@ -774,7 +783,7 @@ questions = {
     },
 
     "q_patient_focused": {
-        "text": "Is your work ultimately aimed at directly helping sick or vulnerable people — giving them medicine, care, or treatment in a clinical setting?",
+        "text": "Is your work ultimately aimed at directly treating or caring for sick people?",
         "tags": ["healthcare_focus", "clinical_practice"],
         "responses": LIKERT,
         "followups": {
@@ -785,7 +794,7 @@ questions = {
     },
 
     "q_bedside_or_dispensing": {
-        "text": "Is your patient contact primarily at the bedside — monitoring vital signs, providing physical care, and supporting recovery — rather than preparing and dispensing medicines?",
+        "text": "Is your patient contact at the bedside monitoring and caring for people rather than preparing and dispensing medicines?",
         "tags": ["patient_bedside_care", "clinical_placements"],
         "responses": LIKERT,
         "followups": {
@@ -795,7 +804,7 @@ questions = {
     },
 
     "q_pharmacy_specific": {
-        "text": "Is your work specifically about the science of medicines — how drugs are formulated, compounded, tested, and safely dispensed to patients?",
+        "text": "Is your work specifically about how drugs are formulated, compounded, and dispensed to patients?",
         "tags": ["drug_formulation", "pharmacy_compounding", "dispensing_practice"],
         "responses": LIKERT,
         "followups": {
@@ -804,7 +813,7 @@ questions = {
     },
 
     "q_drug_or_cell": {
-        "text": "In your lab work, is your primary focus on drug molecules and their effects on the body — rather than on cells, proteins, and fundamental biochemical processes?",
+        "text": "Is your lab work more about drug molecules and their effects than about cells and biochemical processes?",
         "tags": ["drug_formulation", "pharmacotherapy"],
         "responses": LIKERT,
         "followups": {
@@ -814,21 +823,21 @@ questions = {
     },
 
     "q_biochem_focus": {
-        "text": "Do you work at the molecular level of living systems — studying enzyme reactions, protein structures, or how cells carry out basic biological processes?",
+        "text": "Do you study enzyme reactions, protein structures, or how cells carry out basic biological processes?",
         "tags": ["protein_assays", "enzyme_kinetics", "molecular_biology"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_pure_chemistry": {
-        "text": "Is your lab work focused on precise chemical measurement and analysis — techniques like chromatography, spectroscopy, or calibrating analytical instruments?",
+        "text": "Is your lab work focused on precise chemical measurement using techniques like chromatography or spectroscopy?",
         "tags": ["chromatography", "spectroscopy", "analytical_method_validation"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_population_health_focus": {
-        "text": "Do you study health at a population level — tracking how diseases spread, measuring health outcomes across communities, or evaluating public health programmes?",
+        "text": "Do you study health at a community or population level rather than treating individual patients?",
         "tags": ["public_health_focus", "disease_surveillance", "population_health"],
         "responses": LIKERT,
         "followups": {
@@ -837,14 +846,14 @@ questions = {
     },
 
     "q_epidemiology": {
-        "text": "Do you use statistical tools specifically to understand how diseases spread across populations, who is most at risk, and how interventions slow them down?",
+        "text": "Do you use statistics to track how diseases spread across populations and evaluate public health interventions?",
         "tags": ["epidemiology_methods", "biostatistics", "outbreak_investigation"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_healthcare_mgmt": {
-        "text": "Are you learning to run healthcare organisations — managing hospitals, designing health policy, or improving health systems — without providing direct patient care yourself?",
+        "text": "Are you learning to manage health organisations and systems rather than providing direct patient care?",
         "tags": ["hospital_administration", "health_systems_management", "non_clinical_health"],
         "responses": LIKERT,
         "followups": {},
@@ -852,7 +861,7 @@ questions = {
 
     # ── CLINICAL PRACTICE ─────────────────────────────────────
     "q_clinical_practice": {
-        "text": "Do you actually sit with real clients or patients — conducting sessions, running assessments, or providing direct therapeutic care as part of your training?",
+        "text": "Do you sit with real clients or patients conducting sessions and assessments as part of your training?",
         "tags": ["clinical_practice"],
         "responses": LIKERT,
         "followups": {
@@ -862,14 +871,14 @@ questions = {
     },
 
     "q_practicum": {
-        "text": "Are you required to log a minimum number of supervised clinical or practical hours — sitting in on or conducting real sessions with clients or patients?",
+        "text": "Are you required to log supervised clinical hours with real clients or patients?",
         "tags": ["practicum"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_licensure": {
-        "text": "Is passing a professional board exam — pharmacy board, nursing council, or psychology licensing test — a formal goal built into your programme?",
+        "text": "Is passing a professional board exam built into your programme's goals?",
         "tags": ["licensure"],
         "responses": LIKERT,
         "followups": {
@@ -878,7 +887,7 @@ questions = {
     },
 
     "q_professional_certification": {
-        "text": "Are you specifically working toward a globally recognised professional qualification — like CPA, ACCA, CISSP, or a pharmacy or nursing board certification?",
+        "text": "Are you working toward a globally recognised professional qualification like CPA, ACCA, or CISSP?",
         "tags": ["cpa_track", "security_cert_prep"],
         "responses": LIKERT,
         "followups": {},
@@ -886,14 +895,14 @@ questions = {
 
     # ── RESEARCH ─────────────────────────────────────────────
     "q_research": {
-        "text": "Does your programme expect you to engage deeply with academic literature — reading journal papers, critiquing studies, and writing research-heavy work?",
+        "text": "Does your programme expect you to read academic journals and write research-heavy assignments regularly?",
         "tags": ["research"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_quantitative": {
-        "text": "Are numbers, statistics, or mathematical modelling genuinely central to how you analyse and solve problems in your field?",
+        "text": "Are numbers, statistics, or mathematical modelling central to how you solve problems in your field?",
         "tags": ["quantitative"],
         "responses": LIKERT,
         "followups": {
@@ -901,9 +910,9 @@ questions = {
         },
     },
 
-    # ── CREATIVE ARTS: Film vs Animation vs Journalism ────────
+    # ── CREATIVE ARTS ─────────────────────────────────────────
     "q_portfolio": {
-        "text": "Will you leave your programme with a portfolio, showreel, or body of creative work you can actually show to future employers or clients?",
+        "text": "Will you graduate with a portfolio or showreel you can show to future employers?",
         "tags": ["portfolio"],
         "responses": LIKERT,
         "followups": {
@@ -912,7 +921,7 @@ questions = {
     },
 
     "q_screen_or_words": {
-        "text": "Is your creative output primarily VISUAL — things people watch on a screen like films, animations, or motion graphics — rather than written content like articles or news reports?",
+        "text": "Is your creative output primarily visual content people watch rather than written content people read?",
         "tags": ["design"],
         "responses": LIKERT,
         "followups": {
@@ -924,7 +933,7 @@ questions = {
     },
 
     "q_film_or_animation": {
-        "text": "Is your visual work about bringing CHARACTERS and WORLDS to life through drawing and digital illustration — as opposed to shooting and directing real people and locations on a camera?",
+        "text": "Is your visual work created by drawing and illustrating characters rather than shooting real footage on a camera?",
         "tags": ["character_animation", "3d_modelling"],
         "responses": LIKERT,
         "followups": {
@@ -934,28 +943,28 @@ questions = {
     },
 
     "q_journalism": {
-        "text": "Are you learning to find real stories, verify facts, and communicate them accurately to a public audience — through articles, investigations, or broadcast journalism?",
+        "text": "Are you learning to find real stories, verify facts, and report them to a public audience?",
         "tags": ["news_writing", "investigative_reporting", "newsroom_practice"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_studio": {
-        "text": "Do you do hands-on production work in a dedicated studio space — on a film set, in an animation suite, or in a broadcast facility?",
+        "text": "Do you work in a dedicated production space like a film set, animation lab, or broadcast booth?",
         "tags": ["studio"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_film": {
-        "text": "Is directing, shooting on a camera, or editing real footage into a finished film or video at the heart of what you study?",
+        "text": "Is directing, shooting, or editing real footage into a finished film at the heart of your studies?",
         "tags": ["cinematography", "directing", "film_set_work"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_communication_studies": {
-        "text": "Do you study how media shapes public opinion at a theoretical level — analysing audiences, media effects, or editorial strategy — rather than producing content yourself?",
+        "text": "Do you study how media shapes public opinion through theory and audience research rather than making content yourself?",
         "tags": ["audience_research", "media_theory", "communication_theory"],
         "responses": LIKERT,
         "followups": {
@@ -964,10 +973,6 @@ questions = {
     },
 }
 
-
-# ─────────────────────────────────────────────────────────────
-# SCHOOL QUESTION POOLS
-# ─────────────────────────────────────────────────────────────
 school_questions = {
     "Chandaria School of Business": [
         "q_numbers_or_people", "q_invest_or_audit", "q_finance",
