@@ -1,0 +1,1186 @@
+{
+  "postgraduate|Definitely No": {
+    "success": 3,
+    "trials": 8
+  },
+  "business|Probably No": {
+    "success": 0,
+    "trials": 1
+  },
+  "science|Probably Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "social_science|Probably No": {
+    "success": 0,
+    "trials": 1
+  },
+  "creative|Neutral": {
+    "success": 0,
+    "trials": 4
+  },
+  "coding|Probably Yes": {
+    "success": 2241,
+    "trials": 2241
+  },
+  "lab_work|Definitely No": {
+    "success": 423,
+    "trials": 433
+  },
+  "portfolio|Probably No": {
+    "success": 395,
+    "trials": 396
+  },
+  "postgraduate|Probably No": {
+    "success": 0,
+    "trials": 1
+  },
+  "business|Definitely No": {
+    "success": 3,
+    "trials": 4
+  },
+  "science|Neutral": {
+    "success": 0,
+    "trials": 1
+  },
+  "social_science|Probably Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "creative|Probably No": {
+    "success": 0,
+    "trials": 1
+  },
+  "coding|Definitely No": {
+    "success": 5935,
+    "trials": 5943
+  },
+  "lab_work|Probably No": {
+    "success": 348,
+    "trials": 350
+  },
+  "portfolio|Definitely No": {
+    "success": 549,
+    "trials": 551
+  },
+  "science|Definitely Yes": {
+    "success": 6,
+    "trials": 6
+  },
+  "social_science|Definitely No": {
+    "success": 4,
+    "trials": 9
+  },
+  "creative|Definitely No": {
+    "success": 3,
+    "trials": 5
+  },
+  "lab_work|Definitely Yes": {
+    "success": 237,
+    "trials": 237
+  },
+  "business|Definitely Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "science|Definitely No": {
+    "success": 3,
+    "trials": 6
+  },
+  "portfolio|Definitely Yes": {
+    "success": 163,
+    "trials": 164
+  },
+  "business|Neutral": {
+    "success": 0,
+    "trials": 3
+  },
+  "coding|Definitely Yes": {
+    "success": 1856,
+    "trials": 1856
+  },
+  "portfolio|Probably Yes": {
+    "success": 203,
+    "trials": 205
+  },
+  "creative|Definitely Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "science|Probably No": {
+    "success": 0,
+    "trials": 1
+  },
+  "portfolio|Neutral": {
+    "success": 300,
+    "trials": 301
+  },
+  "powerquery|Definitely Yes": {
+    "success": 206,
+    "trials": 207
+  },
+  "visualisation|Definitely Yes": {
+    "success": 990,
+    "trials": 991
+  },
+  "photography|Definitely No": {
+    "success": 383,
+    "trials": 384
+  },
+  "uiux|Definitely No": {
+    "success": 18,
+    "trials": 19
+  },
+  "thesis|Probably Yes": {
+    "success": 2919,
+    "trials": 2923
+  },
+  "research|Definitely Yes": {
+    "success": 4311,
+    "trials": 4314
+  },
+  "clinical_practice|Definitely No": {
+    "success": 4268,
+    "trials": 4283
+  },
+  "research|Probably Yes": {
+    "success": 2950,
+    "trials": 2951
+  },
+  "practicum|Definitely Yes": {
+    "success": 1072,
+    "trials": 1073
+  },
+  "placements|Definitely Yes": {
+    "success": 356,
+    "trials": 357
+  },
+  "career|Probably Yes": {
+    "success": 322,
+    "trials": 327
+  },
+  "entrepreneurship|Neutral": {
+    "success": 310,
+    "trials": 314
+  },
+  "case_study|Definitely Yes": {
+    "success": 57,
+    "trials": 59
+  },
+  "finance|Definitely No": {
+    "success": 28,
+    "trials": 37
+  },
+  "excel|Definitely No": {
+    "success": 5,
+    "trials": 15
+  },
+  "clinical_practice|Definitely Yes": {
+    "success": 1557,
+    "trials": 1558
+  },
+  "tools|None of these": {
+    "success": 0,
+    "trials": 4
+  },
+  "visualisation|Definitely No": {
+    "success": 4440,
+    "trials": 4444
+  },
+  "sql|Definitely No": {
+    "success": 4294,
+    "trials": 4298
+  },
+  "python|Definitely No": {
+    "success": 5480,
+    "trials": 5484
+  },
+  "java|Definitely No": {
+    "success": 4790,
+    "trials": 4794
+  },
+  "thesis|Definitely No": {
+    "success": 3574,
+    "trials": 3583
+  },
+  "research|Definitely No": {
+    "success": 3526,
+    "trials": 3536
+  },
+  "practicum|Probably No": {
+    "success": 2795,
+    "trials": 2799
+  },
+  "research|Neutral": {
+    "success": 3251,
+    "trials": 3254
+  },
+  "practicum|Neutral": {
+    "success": 2033,
+    "trials": 2035
+  },
+  "tools|Neutral": {
+    "success": 2297,
+    "trials": 2297
+  },
+  "visualisation|Neutral": {
+    "success": 2353,
+    "trials": 2353
+  },
+  "sql|Probably No": {
+    "success": 3301,
+    "trials": 3301
+  },
+  "python|Probably No": {
+    "success": 3997,
+    "trials": 3997
+  },
+  "java|Neutral": {
+    "success": 2424,
+    "trials": 2424
+  },
+  "thesis|Definitely Yes": {
+    "success": 4235,
+    "trials": 4235
+  },
+  "python|Definitely Yes": {
+    "success": 1281,
+    "trials": 1281
+  },
+  "ml|Definitely No": {
+    "success": 456,
+    "trials": 456
+  },
+  "statistics|Definitely No": {
+    "success": 435,
+    "trials": 435
+  },
+  "thesis|Probably No": {
+    "success": 3215,
+    "trials": 3216
+  },
+  "clinical_practice|Neutral": {
+    "success": 2434,
+    "trials": 2434
+  },
+  "python|Neutral": {
+    "success": 2845,
+    "trials": 2845
+  },
+  "thesis|Neutral": {
+    "success": 3172,
+    "trials": 3173
+  },
+  "coding|Probably No": {
+    "success": 4411,
+    "trials": 4411
+  },
+  "tools|Definitely No": {
+    "success": 4531,
+    "trials": 4531
+  },
+  "visualisation|Probably No": {
+    "success": 3402,
+    "trials": 3402
+  },
+  "python|Probably Yes": {
+    "success": 1819,
+    "trials": 1819
+  },
+  "sql|Neutral": {
+    "success": 2181,
+    "trials": 2181
+  },
+  "java|Probably No": {
+    "success": 3732,
+    "trials": 3732
+  },
+  "visualisation|Probably Yes": {
+    "success": 1502,
+    "trials": 1502
+  },
+  "tools|Probably Yes": {
+    "success": 1430,
+    "trials": 1430
+  },
+  "java|Definitely Yes": {
+    "success": 1099,
+    "trials": 1099
+  },
+  "tools|Definitely Yes": {
+    "success": 960,
+    "trials": 960
+  },
+  "clinical_practice|Probably Yes": {
+    "success": 1747,
+    "trials": 1747
+  },
+  "practicum|Definitely No": {
+    "success": 3666,
+    "trials": 3671
+  },
+  "placements|Definitely No": {
+    "success": 1711,
+    "trials": 1721
+  },
+  "tools|Probably No": {
+    "success": 3340,
+    "trials": 3340
+  },
+  "research|Probably No": {
+    "success": 3233,
+    "trials": 3234
+  },
+  "statistics|Probably Yes": {
+    "success": 153,
+    "trials": 153
+  },
+  "photography|Probably No": {
+    "success": 283,
+    "trials": 283
+  },
+  "sql|Definitely Yes": {
+    "success": 922,
+    "trials": 922
+  },
+  "powerquery|Probably Yes": {
+    "success": 313,
+    "trials": 313
+  },
+  "java|Probably Yes": {
+    "success": 1643,
+    "trials": 1643
+  },
+  "coding|Neutral": {
+    "success": 3239,
+    "trials": 3239
+  },
+  "powerquery|Probably No": {
+    "success": 720,
+    "trials": 720
+  },
+  "ml|Probably No": {
+    "success": 309,
+    "trials": 309
+  },
+  "statistics|Neutral": {
+    "success": 232,
+    "trials": 232
+  },
+  "sql|Probably Yes": {
+    "success": 1451,
+    "trials": 1451
+  },
+  "photography|Probably Yes": {
+    "success": 133,
+    "trials": 133
+  },
+  "powerquery|Definitely No": {
+    "success": 960,
+    "trials": 960
+  },
+  "placements|Probably Yes": {
+    "success": 595,
+    "trials": 595
+  },
+  "powerquery|Neutral": {
+    "success": 454,
+    "trials": 454
+  },
+  "entrepreneurship|Definitely Yes": {
+    "success": 320,
+    "trials": 320
+  },
+  "photography|Neutral": {
+    "success": 223,
+    "trials": 223
+  },
+  "clinical_practice|Probably No": {
+    "success": 3222,
+    "trials": 3222
+  },
+  "placements|Neutral": {
+    "success": 900,
+    "trials": 900
+  },
+  "placements|Probably No": {
+    "success": 1310,
+    "trials": 1310
+  },
+  "lab_work|Neutral": {
+    "success": 284,
+    "trials": 284
+  },
+  "career|Probably No": {
+    "success": 710,
+    "trials": 710
+  },
+  "entrepreneurship|Probably Yes": {
+    "success": 246,
+    "trials": 250
+  },
+  "career|Definitely No": {
+    "success": 954,
+    "trials": 954
+  },
+  "statistics|Probably No": {
+    "success": 366,
+    "trials": 366
+  },
+  "statistics|Definitely Yes": {
+    "success": 95,
+    "trials": 95
+  },
+  "ml|Probably Yes": {
+    "success": 168,
+    "trials": 168
+  },
+  "photography|Definitely Yes": {
+    "success": 91,
+    "trials": 91
+  },
+  "ml|Definitely Yes": {
+    "success": 108,
+    "trials": 108
+  },
+  "ml|Neutral": {
+    "success": 240,
+    "trials": 240
+  },
+  "practicum|Probably Yes": {
+    "success": 1388,
+    "trials": 1389
+  },
+  "entrepreneurship|Probably No": {
+    "success": 351,
+    "trials": 354
+  },
+  "chemistry|Probably No": {
+    "success": 61,
+    "trials": 61
+  },
+  "lab_work|Probably Yes": {
+    "success": 202,
+    "trials": 202
+  },
+  "microscopy|Probably No": {
+    "success": 44,
+    "trials": 44
+  },
+  "career|Neutral": {
+    "success": 484,
+    "trials": 485
+  },
+  "case_study|Probably Yes": {
+    "success": 56,
+    "trials": 64
+  },
+  "microscopy|Definitely No": {
+    "success": 55,
+    "trials": 55
+  },
+  "microscopy|Probably Yes": {
+    "success": 21,
+    "trials": 21
+  },
+  "entrepreneurship|Definitely No": {
+    "success": 416,
+    "trials": 416
+  },
+  "microscopy|Definitely Yes": {
+    "success": 8,
+    "trials": 8
+  },
+  "case_study|Definitely No": {
+    "success": 78,
+    "trials": 79
+  },
+  "microscopy|Neutral": {
+    "success": 34,
+    "trials": 34
+  },
+  "career|Definitely Yes": {
+    "success": 206,
+    "trials": 211
+  },
+  "finance|Probably No": {
+    "success": 25,
+    "trials": 26
+  },
+  "chemistry|Definitely No": {
+    "success": 72,
+    "trials": 72
+  },
+  "chemistry|Probably Yes": {
+    "success": 25,
+    "trials": 25
+  },
+  "uiux|Probably No": {
+    "success": 10,
+    "trials": 10
+  },
+  "chemistry|Neutral": {
+    "success": 25,
+    "trials": 25
+  },
+  "finance|Definitely Yes": {
+    "success": 8,
+    "trials": 10
+  },
+  "case_study|Probably No": {
+    "success": 79,
+    "trials": 79
+  },
+  "case_study|Neutral": {
+    "success": 65,
+    "trials": 65
+  },
+  "finance|Probably Yes": {
+    "success": 9,
+    "trials": 9
+  },
+  "uiux|Neutral": {
+    "success": 8,
+    "trials": 8
+  },
+  "excel|Probably No": {
+    "success": 4,
+    "trials": 4
+  },
+  "excel|Definitely Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "uiux|Probably Yes": {
+    "success": 7,
+    "trials": 7
+  },
+  "chemistry|Definitely Yes": {
+    "success": 15,
+    "trials": 15
+  },
+  "finance|Neutral": {
+    "success": 11,
+    "trials": 11
+  },
+  "uiux|Definitely Yes": {
+    "success": 5,
+    "trials": 5
+  },
+  "excel|Neutral": {
+    "success": 1,
+    "trials": 1
+  },
+  "big_data_platforms|Neutral": {
+    "success": 42,
+    "trials": 42
+  },
+  "model_deployment|Definitely No": {
+    "success": 73,
+    "trials": 73
+  },
+  "clinical_supervision|Probably No": {
+    "success": 299,
+    "trials": 299
+  },
+  "security_cert_prep|Definitely No": {
+    "success": 149,
+    "trials": 149
+  },
+  "licensure_preparation|Probably No": {
+    "success": 227,
+    "trials": 227
+  },
+  "clinical_supervision|Definitely No": {
+    "success": 382,
+    "trials": 382
+  },
+  "family_therapy_practicum|Probably Yes": {
+    "success": 87,
+    "trials": 87
+  },
+  "systemic_therapy|Neutral": {
+    "success": 92,
+    "trials": 92
+  },
+  "licensure_track|Probably Yes": {
+    "success": 47,
+    "trials": 47
+  },
+  "big_data_platforms|Probably Yes": {
+    "success": 32,
+    "trials": 32
+  },
+  "model_deployment|Definitely Yes": {
+    "success": 11,
+    "trials": 11
+  },
+  "feature_engineering|Definitely No": {
+    "success": 58,
+    "trials": 58
+  },
+  "software_engineering_practices|Definitely No": {
+    "success": 59,
+    "trials": 59
+  },
+  "security_cert_prep|Probably No": {
+    "success": 113,
+    "trials": 113
+  },
+  "clinical_supervision|Neutral": {
+    "success": 189,
+    "trials": 189
+  },
+  "licensure_preparation|Probably Yes": {
+    "success": 86,
+    "trials": 86
+  },
+  "family_therapy_practicum|Neutral": {
+    "success": 115,
+    "trials": 115
+  },
+  "systemic_therapy|Probably No": {
+    "success": 141,
+    "trials": 141
+  },
+  "licensure_track|Probably No": {
+    "success": 110,
+    "trials": 110
+  },
+  "licensure_preparation|Neutral": {
+    "success": 112,
+    "trials": 112
+  },
+  "family_therapy_practicum|Definitely No": {
+    "success": 276,
+    "trials": 276
+  },
+  "systemic_therapy|Definitely No": {
+    "success": 226,
+    "trials": 226
+  },
+  "family_therapy_practicum|Probably No": {
+    "success": 222,
+    "trials": 222
+  },
+  "executive_capstone|Definitely No": {
+    "success": 41,
+    "trials": 41
+  },
+  "licensure_track|Neutral": {
+    "success": 76,
+    "trials": 76
+  },
+  "model_deployment|Probably No": {
+    "success": 62,
+    "trials": 62
+  },
+  "feature_engineering|Neutral": {
+    "success": 26,
+    "trials": 26
+  },
+  "software_engineering_practices|Definitely Yes": {
+    "success": 12,
+    "trials": 12
+  },
+  "security_cert_prep|Probably Yes": {
+    "success": 45,
+    "trials": 45
+  },
+  "tax_practice|Probably No": {
+    "success": 12,
+    "trials": 12
+  },
+  "audit_methodology|Definitely No": {
+    "success": 7,
+    "trials": 7
+  },
+  "licensure_track|Definitely No": {
+    "success": 145,
+    "trials": 145
+  },
+  "clinical_trials|Probably No": {
+    "success": 68,
+    "trials": 68
+  },
+  "drug_regulatory|Neutral": {
+    "success": 24,
+    "trials": 24
+  },
+  "systemic_therapy|Probably Yes": {
+    "success": 57,
+    "trials": 57
+  },
+  "licensure_preparation|Definitely No": {
+    "success": 264,
+    "trials": 264
+  },
+  "clinical_trials|Definitely No": {
+    "success": 83,
+    "trials": 83
+  },
+  "drug_regulatory|Probably Yes": {
+    "success": 5,
+    "trials": 5
+  },
+  "clinical_supervision|Probably Yes": {
+    "success": 126,
+    "trials": 126
+  },
+  "executive_capstone|Probably Yes": {
+    "success": 17,
+    "trials": 17
+  },
+  "clinical_trials|Neutral": {
+    "success": 50,
+    "trials": 50
+  },
+  "drug_regulatory|Probably No": {
+    "success": 52,
+    "trials": 52
+  },
+  "family_therapy_practicum|Definitely Yes": {
+    "success": 43,
+    "trials": 43
+  },
+  "big_data_platforms|Probably No": {
+    "success": 61,
+    "trials": 61
+  },
+  "model_deployment|Probably Yes": {
+    "success": 31,
+    "trials": 31
+  },
+  "big_data_platforms|Definitely No": {
+    "success": 97,
+    "trials": 97
+  },
+  "organizational_psychology|Neutral": {
+    "success": 10,
+    "trials": 10
+  },
+  "media_editing_workflow|Probably No": {
+    "success": 34,
+    "trials": 34
+  },
+  "media_editing_workflow|Probably Yes": {
+    "success": 12,
+    "trials": 12
+  },
+  "feature_engineering|Probably No": {
+    "success": 49,
+    "trials": 49
+  },
+  "software_engineering_practices|Neutral": {
+    "success": 29,
+    "trials": 29
+  },
+  "clinical_supervision|Definitely Yes": {
+    "success": 84,
+    "trials": 84
+  },
+  "licensure_track|Definitely Yes": {
+    "success": 21,
+    "trials": 21
+  },
+  "licensure_preparation|Definitely Yes": {
+    "success": 57,
+    "trials": 57
+  },
+  "security_cert_prep|Definitely Yes": {
+    "success": 31,
+    "trials": 31
+  },
+  "drug_regulatory|Definitely No": {
+    "success": 52,
+    "trials": 52
+  },
+  "executive_capstone|Neutral": {
+    "success": 23,
+    "trials": 23
+  },
+  "big_data_platforms|Definitely Yes": {
+    "success": 26,
+    "trials": 26
+  },
+  "model_deployment|Neutral": {
+    "success": 30,
+    "trials": 30
+  },
+  "software_engineering_practices|Probably No": {
+    "success": 50,
+    "trials": 50
+  },
+  "pharmacy_compounding|Probably Yes": {
+    "success": 6,
+    "trials": 6
+  },
+  "pharm_lab_safety|Definitely No": {
+    "success": 12,
+    "trials": 12
+  },
+  "organizational_psychology|Probably No": {
+    "success": 17,
+    "trials": 17
+  },
+  "media_editing_workflow|Neutral": {
+    "success": 13,
+    "trials": 13
+  },
+  "professional_certification_cpa|Probably Yes": {
+    "success": 14,
+    "trials": 14
+  },
+  "tax_practice|Neutral": {
+    "success": 11,
+    "trials": 11
+  },
+  "audit_methodology|Probably Yes": {
+    "success": 5,
+    "trials": 5
+  },
+  "practicum_hours|Definitely No": {
+    "success": 21,
+    "trials": 21
+  },
+  "newsroom_internship|Probably No": {
+    "success": 19,
+    "trials": 19
+  },
+  "investigative_reporting|Definitely No": {
+    "success": 18,
+    "trials": 18
+  },
+  "editorial_workflow|Definitely No": {
+    "success": 9,
+    "trials": 9
+  },
+  "pharm_lab_safety|Probably No": {
+    "success": 10,
+    "trials": 10
+  },
+  "practicum_hours|Probably No": {
+    "success": 27,
+    "trials": 27
+  },
+  "case_competitions|Definitely No": {
+    "success": 18,
+    "trials": 18
+  },
+  "pharmacy_compounding|Probably No": {
+    "success": 11,
+    "trials": 11
+  },
+  "software_engineering_practices|Probably Yes": {
+    "success": 15,
+    "trials": 15
+  },
+  "practicum_hours|Probably Yes": {
+    "success": 12,
+    "trials": 12
+  },
+  "professional_certification_cpa|Neutral": {
+    "success": 17,
+    "trials": 17
+  },
+  "professional_certification_cpa|Definitely Yes": {
+    "success": 20,
+    "trials": 20
+  },
+  "tax_practice|Definitely Yes": {
+    "success": 10,
+    "trials": 10
+  },
+  "audit_methodology|Neutral": {
+    "success": 6,
+    "trials": 6
+  },
+  "investigative_reporting|Neutral": {
+    "success": 7,
+    "trials": 7
+  },
+  "editorial_workflow|Neutral": {
+    "success": 2,
+    "trials": 2
+  },
+  "case_competitions|Probably No": {
+    "success": 16,
+    "trials": 16
+  },
+  "newsroom_internship|Definitely No": {
+    "success": 23,
+    "trials": 23
+  },
+  "vfx_pipeline|Probably No": {
+    "success": 6,
+    "trials": 6
+  },
+  "security_cert_prep|Neutral": {
+    "success": 53,
+    "trials": 53
+  },
+  "clinical_trials|Probably Yes": {
+    "success": 28,
+    "trials": 28
+  },
+  "vfx_pipeline|Neutral": {
+    "success": 5,
+    "trials": 5
+  },
+  "pharmacy_compounding|Neutral": {
+    "success": 7,
+    "trials": 7
+  },
+  "audit_methodology|Probably No": {
+    "success": 11,
+    "trials": 11
+  },
+  "pharmacy_compounding|Definitely No": {
+    "success": 22,
+    "trials": 22
+  },
+  "organizational_psychology|Definitely Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "tax_practice|Definitely No": {
+    "success": 12,
+    "trials": 12
+  },
+  "feature_engineering|Probably Yes": {
+    "success": 17,
+    "trials": 17
+  },
+  "executive_capstone|Definitely Yes": {
+    "success": 18,
+    "trials": 18
+  },
+  "systemic_therapy|Definitely Yes": {
+    "success": 41,
+    "trials": 41
+  },
+  "professional_certification_cpa|Definitely No": {
+    "success": 27,
+    "trials": 27
+  },
+  "organizational_psychology|Definitely No": {
+    "success": 21,
+    "trials": 21
+  },
+  "drug_regulatory|Definitely Yes": {
+    "success": 20,
+    "trials": 20
+  },
+  "clinical_trials|Definitely Yes": {
+    "success": 8,
+    "trials": 8
+  },
+  "media_editing_workflow|Definitely No": {
+    "success": 32,
+    "trials": 32
+  },
+  "executive_capstone|Probably No": {
+    "success": 29,
+    "trials": 29
+  },
+  "case_competitions|Definitely Yes": {
+    "success": 12,
+    "trials": 12
+  },
+  "vfx_pipeline|Definitely No": {
+    "success": 6,
+    "trials": 6
+  },
+  "practicum_hours|Neutral": {
+    "success": 12,
+    "trials": 12
+  },
+  "professional_certification_cpa|Probably No": {
+    "success": 25,
+    "trials": 25
+  },
+  "leadership_coaching|Neutral": {
+    "success": 9,
+    "trials": 9
+  },
+  "audit_methodology|Definitely Yes": {
+    "success": 5,
+    "trials": 5
+  },
+  "editorial_workflow|Probably Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "case_competitions|Neutral": {
+    "success": 9,
+    "trials": 9
+  },
+  "tax_practice|Probably Yes": {
+    "success": 7,
+    "trials": 7
+  },
+  "practicum_hours|Definitely Yes": {
+    "success": 5,
+    "trials": 5
+  },
+  "leadership_coaching|Probably Yes": {
+    "success": 6,
+    "trials": 6
+  },
+  "leadership_coaching|Definitely Yes": {
+    "success": 7,
+    "trials": 7
+  },
+  "leadership_coaching|Probably No": {
+    "success": 7,
+    "trials": 7
+  },
+  "feature_engineering|Definitely Yes": {
+    "success": 12,
+    "trials": 12
+  },
+  "leadership_coaching|Definitely No": {
+    "success": 9,
+    "trials": 9
+  },
+  "case_competitions|Probably Yes": {
+    "success": 8,
+    "trials": 8
+  },
+  "vfx_pipeline|Probably Yes": {
+    "success": 3,
+    "trials": 3
+  },
+  "newsroom_internship|Neutral": {
+    "success": 10,
+    "trials": 10
+  },
+  "investigative_reporting|Probably No": {
+    "success": 6,
+    "trials": 6
+  },
+  "pharm_lab_safety|Definitely Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "organizational_psychology|Probably Yes": {
+    "success": 3,
+    "trials": 3
+  },
+  "pharm_lab_safety|Neutral": {
+    "success": 4,
+    "trials": 4
+  },
+  "media_editing_workflow|Definitely Yes": {
+    "success": 6,
+    "trials": 6
+  },
+  "pharmacy_compounding|Definitely Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "pharm_lab_safety|Probably Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "investigative_reporting|Probably Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "editorial_workflow|Probably No": {
+    "success": 6,
+    "trials": 6
+  },
+  "newsroom_internship|Probably Yes": {
+    "success": 5,
+    "trials": 5
+  },
+  "newsroom_internship|Definitely Yes": {
+    "success": 3,
+    "trials": 3
+  },
+  "investigative_reporting|Definitely Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "editorial_workflow|Definitely Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "vfx_pipeline|Definitely Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "internship|Definitely Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "quantitative|Definitely Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "confusion|Epidemiology & Biostatistics|Data Science & Analytics": {
+    "success": 0,
+    "trials": 2
+  },
+  "program_freq|Data Science & Analytics": {
+    "success": 2,
+    "trials": 2
+  },
+  "social_science|Definitely Yes": {
+    "success": 2,
+    "trials": 2
+  },
+  "licensure|Neutral": {
+    "success": 1,
+    "trials": 1
+  },
+  "program_freq|Marriage and Family Therapy": {
+    "success": 1,
+    "trials": 1
+  },
+  "internship|Neutral": {
+    "success": 4,
+    "trials": 4
+  },
+  "healthcare_focus|Definitely No": {
+    "success": 2,
+    "trials": 3
+  },
+  "quantitative|Probably Yes": {
+    "success": 1,
+    "trials": 1
+  },
+  "program_freq|Accounting": {
+    "success": 1,
+    "trials": 1
+  },
+  "social_science|Neutral": {
+    "success": 1,
+    "trials": 1
+  },
+  "design|Definitely No": {
+    "success": 1,
+    "trials": 1
+  },
+  "program_freq|Journalism": {
+    "success": 1,
+    "trials": 1
+  },
+  "quantitative|Definitely No": {
+    "success": 0,
+    "trials": 1
+  },
+  "leadership_focus|Definitely No": {
+    "success": 0,
+    "trials": 1
+  },
+  "confusion|Hotel & Restaurant Management|Criminal Justice Studies": {
+    "success": 0,
+    "trials": 1
+  },
+  "program_freq|Criminal Justice Studies": {
+    "success": 1,
+    "trials": 1
+  }
+}
