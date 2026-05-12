@@ -212,78 +212,22 @@ programs = [
 
 
 # ─────────────────────────────────────────────────────────────
-# QUESTION BANK
-# ─────────────────────────────────────────────────────────────
-# Each question has:
-#   text      – what the user sees
-#   tags      – attribute(s) the answer updates (first tag = primary)
-#   responses – list of allowed Likert options
-#   followups – dict of response → [list of follow-up qids to ask next]
-#   type      – "likert" (default) or "multi"
+# QUESTION BANK  —  Behavioural / experiential framing
+#
+# Design principle: ask what the student DOES, FEELS, or CARES
+# about — never ask which school or department they belong to.
+# The Bayesian engine infers the school from the pattern of
+# answers. Each question should feel like a curious friend
+# trying to figure it out, not a registration form.
 # ─────────────────────────────────────────────────────────────
 
 LIKERT = ["Definitely Yes", "Probably Yes", "Neutral", "Probably No", "Definitely No"]
 
 questions = {
 
-    # ── SCHOOL-LEVEL GATES ────────────────────────────────────
-    "q_business": {
-        "text": "Is your programme primarily focused on business, management, or commerce?",
-        "tags": ["business"],
-        "responses": LIKERT,
-        "followups": {
-            "Definitely Yes": ["q_postgraduate", "q_leadership", "q_finance"],
-            "Probably Yes":   ["q_postgraduate", "q_leadership"],
-            "Definitely No":  ["q_science", "q_social_science", "q_health_science", "q_creative"],
-        },
-    },
-
-    "q_science": {
-        "text": "Is your programme in the School of Science & Technology (computing, data, AI, or engineering)?",
-        "tags": ["science"],
-        "responses": LIKERT,
-        "followups": {
-            "Definitely Yes": ["q_coding", "q_lab_work"],
-            "Probably Yes":   ["q_coding"],
-            "Definitely No":  ["q_social_science", "q_health_science", "q_creative"],
-        },
-    },
-
-    "q_social_science": {
-        "text": "Is your programme focused on social sciences, psychology, or humanities?",
-        "tags": ["social_science"],
-        "responses": LIKERT,
-        "followups": {
-            "Definitely Yes": ["q_psychology", "q_politics", "q_justice"],
-            "Probably Yes":   ["q_psychology", "q_politics"],
-            "Definitely No":  ["q_health_science", "q_creative"],
-        },
-    },
-
-    "q_health_science": {
-        "text": "Is your programme in health sciences, pharmacy, nursing, or biomedical sciences?",
-        "tags": ["healthcare_focus"],
-        "responses": LIKERT,
-        "followups": {
-            "Definitely Yes": ["q_lab_work", "q_clinical_practice", "q_chemical"],
-            "Probably Yes":   ["q_lab_work", "q_clinical_practice"],
-            "Definitely No":  ["q_creative"],
-        },
-    },
-
-    "q_creative": {
-        "text": "Is your programme in media, film, animation, or creative arts?",
-        "tags": ["creative"],
-        "responses": LIKERT,
-        "followups": {
-            "Definitely Yes": ["q_portfolio", "q_design", "q_journalism"],
-            "Probably Yes":   ["q_portfolio", "q_design"],
-        },
-    },
-
-    # ── STUDY LEVEL ───────────────────────────────────────────
+    # ── OPENING — STUDY LEVEL ────────────────────────────────
     "q_postgraduate": {
-        "text": "Are you in a postgraduate programme (Masters or PhD)?",
+        "text": "Do you already hold an undergraduate degree and are currently studying beyond that?",
         "tags": ["postgraduate"],
         "responses": LIKERT,
         "followups": {
@@ -293,7 +237,7 @@ questions = {
     },
 
     "q_phd": {
-        "text": "Are you pursuing a doctoral degree (PhD, DBA, or PsyD)?",
+        "text": "Are you working on original research that could contribute new knowledge to your field — like a dissertation?",
         "tags": ["dissertation"],
         "responses": LIKERT,
         "followups": {
@@ -303,7 +247,7 @@ questions = {
     },
 
     "q_thesis": {
-        "text": "Does your programme require writing a thesis or major research project?",
+        "text": "Is there a major independent research project or thesis sitting at the end of your programme?",
         "tags": ["thesis"],
         "responses": LIKERT,
         "followups": {
@@ -311,16 +255,82 @@ questions = {
         },
     },
 
-    # ── CROSS-CUTTING ─────────────────────────────────────────
+    # ── BROAD INTEREST SIGNALS ────────────────────────────────
+    "q_business": {
+        "text": "When you picture your future career, do you see yourself working inside a company — managing, strategising, or growing a business?",
+        "tags": ["business"],
+        "responses": LIKERT,
+        "followups": {
+            "Definitely Yes": ["q_leadership", "q_finance", "q_global_focus"],
+            "Probably Yes":   ["q_leadership", "q_finance"],
+            "Definitely No":  ["q_coding", "q_lab_work", "q_people_focused"],
+        },
+    },
+
+    "q_people_focused": {
+        "text": "Is a big part of your studies about understanding people — their minds, behaviour, or the way societies work?",
+        "tags": ["social_science"],
+        "responses": LIKERT,
+        "followups": {
+            "Definitely Yes": ["q_psychology", "q_politics", "q_justice"],
+            "Probably Yes":   ["q_psychology", "q_politics"],
+            "Definitely No":  ["q_lab_work", "q_coding", "q_creative"],
+        },
+    },
+
+    "q_coding": {
+        "text": "Do you write code or build software as a regular part of your coursework?",
+        "tags": ["coding"],
+        "responses": LIKERT,
+        "followups": {
+            "Definitely Yes": ["q_data", "q_security", "q_hardware", "q_software_eng"],
+            "Probably Yes":   ["q_data", "q_security"],
+            "Definitely No":  ["q_lab_work", "q_business", "q_people_focused"],
+        },
+    },
+
+    "q_lab_work": {
+        "text": "Do you spend meaningful time in a physical laboratory — running experiments, handling equipment, or testing substances?",
+        "tags": ["lab_work"],
+        "responses": LIKERT,
+        "followups": {
+            "Definitely Yes": ["q_chemical", "q_health_science"],
+            "Probably Yes":   ["q_chemical"],
+            "Definitely No":  ["q_coding", "q_business", "q_people_focused"],
+        },
+    },
+
+    "q_health_science": {
+        "text": "Is your work ultimately aimed at keeping people healthy — whether through medicine, drugs, patient care, or public health?",
+        "tags": ["healthcare_focus"],
+        "responses": LIKERT,
+        "followups": {
+            "Definitely Yes": ["q_clinical_practice", "q_chemical", "q_nursing"],
+            "Probably Yes":   ["q_clinical_practice", "q_chemical"],
+            "Definitely No":  ["q_creative"],
+        },
+    },
+
+    "q_creative": {
+        "text": "Is creating something — a film, an illustration, a written piece, an animation — actually part of how you are assessed?",
+        "tags": ["creative"],
+        "responses": LIKERT,
+        "followups": {
+            "Definitely Yes": ["q_portfolio", "q_design", "q_journalism"],
+            "Probably Yes":   ["q_portfolio", "q_design"],
+        },
+    },
+
+    # ── CROSS-CUTTING SIGNALS ─────────────────────────────────
     "q_research": {
-        "text": "Does your programme place a strong emphasis on academic research and writing?",
+        "text": "Do you spend a significant amount of time reading academic papers and writing research-heavy assignments?",
         "tags": ["research"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_quantitative": {
-        "text": "Does your programme involve heavy use of numbers, statistics, or mathematical analysis?",
+        "text": "Are numbers, data, or statistics central to how you think through problems in your field?",
         "tags": ["quantitative"],
         "responses": LIKERT,
         "followups": {
@@ -329,14 +339,14 @@ questions = {
     },
 
     "q_internship": {
-        "text": "Does your programme include formal internships or industry placements?",
+        "text": "Does your programme send you out to work inside a real company or organisation as part of the curriculum?",
         "tags": ["internship"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_practicum": {
-        "text": "Does your programme require supervised clinical or practical hours (e.g. therapy sessions, hospital shifts)?",
+        "text": "Are you required to clock supervised practical hours — like sitting in on therapy sessions, hospital wards, or clinical settings?",
         "tags": ["practicum"],
         "responses": LIKERT,
         "followups": {
@@ -345,7 +355,7 @@ questions = {
     },
 
     "q_licensure": {
-        "text": "Does your programme prepare you for a professional licence or board exam (e.g. CPA, pharmacy board, nursing council)?",
+        "text": "Is passing a professional board exam — like a pharmacy board, nursing council, or CPA exam — a goal built into your programme?",
         "tags": ["licensure"],
         "responses": LIKERT,
         "followups": {
@@ -354,14 +364,14 @@ questions = {
     },
 
     "q_professional_certification": {
-        "text": "Does your programme specifically prepare you for a professional certification exam (e.g. CPA, CISSP)?",
+        "text": "Are you specifically studying toward a globally recognised professional qualification — like CPA, ACCA, or a cybersecurity certification?",
         "tags": ["professional_certification"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_field_work": {
-        "text": "Does your programme involve fieldwork, community visits, or off-campus practical assignments?",
+        "text": "Does your programme regularly take you off-campus — into communities, courtrooms, newsrooms, or fieldwork sites?",
         "tags": ["field_work"],
         "responses": LIKERT,
         "followups": {},
@@ -369,7 +379,7 @@ questions = {
 
     # ── BUSINESS SCHOOL ───────────────────────────────────────
     "q_finance": {
-        "text": "Does your programme focus on finance, investment, or banking?",
+        "text": "Do concepts like investment returns, market valuation, or banking systems come up regularly in your studies?",
         "tags": ["finance_focus"],
         "responses": LIKERT,
         "followups": {
@@ -379,7 +389,7 @@ questions = {
     },
 
     "q_accounting": {
-        "text": "Does your programme focus on accounting, auditing, or tax?",
+        "text": "Do you spend time learning how to track money flowing in and out of organisations — things like audits, tax, or financial statements?",
         "tags": ["professional_certification_cpa"],
         "responses": LIKERT,
         "followups": {
@@ -388,7 +398,7 @@ questions = {
     },
 
     "q_leadership": {
-        "text": "Is leadership, management, or organisational strategy a core focus of your programme?",
+        "text": "Is a big theme of your programme about how to lead people and make strategic decisions inside organisations?",
         "tags": ["leadership_focus"],
         "responses": LIKERT,
         "followups": {
@@ -398,14 +408,14 @@ questions = {
     },
 
     "q_global_focus": {
-        "text": "Does your programme have a strong international or cross-border focus?",
+        "text": "Do your studies frequently zoom out to an international level — comparing countries, global markets, or international policy?",
         "tags": ["global_focus"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_executive_focus": {
-        "text": "Is your programme designed for working professionals or executives (e.g. part-time/executive format)?",
+        "text": "Are most of the people in your programme already working professionals rather than fresh school-leavers?",
         "tags": ["executive_focus"],
         "responses": LIKERT,
         "followups": {
@@ -414,47 +424,36 @@ questions = {
     },
 
     "q_executive_research": {
-        "text": "Does your programme focus on applied executive or practitioner-led research?",
+        "text": "Is your research tied to solving a real problem in an organisation you already work in — rather than purely academic inquiry?",
         "tags": ["executive_research"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_service_industry": {
-        "text": "Is your programme focused on the hospitality, hotel, or restaurant industry?",
+        "text": "Does your programme prepare you to run or manage places where people eat, stay, or are hosted — like hotels or restaurants?",
         "tags": ["service_industry"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_org_psychology": {
-        "text": "Does your programme cover organisational psychology, change management, or HR development?",
+        "text": "Do you study why organisations succeed or struggle from a human side — things like workplace culture, motivation, or managing change?",
         "tags": ["organizational_psychology"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_healthcare_mgmt": {
-        "text": "Does your programme combine healthcare administration with business or management skills?",
+        "text": "Are you learning to run healthcare systems — hospitals, clinics, or health policy — rather than providing direct patient care?",
         "tags": ["healthcare_focus", "leadership_focus"],
         "responses": LIKERT,
         "followups": {},
     },
 
     # ── SCIENCE & TECHNOLOGY ─────────────────────────────────
-    "q_coding": {
-        "text": "Does your programme involve significant programming or software development?",
-        "tags": ["coding"],
-        "responses": LIKERT,
-        "followups": {
-            "Definitely Yes": ["q_data", "q_security", "q_hardware", "q_software_eng"],
-            "Probably Yes":   ["q_data", "q_security"],
-            "Definitely No":  ["q_lab_work", "q_chemical"],
-        },
-    },
-
     "q_data": {
-        "text": "Does your programme focus on data science, machine learning, or statistical modelling?",
+        "text": "Do you build models that find patterns in data — training algorithms, making predictions, or visualising insights from large datasets?",
         "tags": ["big_data_platforms", "feature_engineering"],
         "responses": LIKERT,
         "followups": {
@@ -463,14 +462,14 @@ questions = {
     },
 
     "q_ai_robotics": {
-        "text": "Does your programme involve artificial intelligence, robotics, or control systems?",
+        "text": "Do you work with physical machines, robotic systems, or AI that interacts with the real world — sensors, motors, control loops?",
         "tags": ["robotics_lab", "control_systems_projects"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_security": {
-        "text": "Does your programme focus on cybersecurity, cryptography, or ethical hacking?",
+        "text": "Do you study how to break into or defend computer systems — things like penetration testing, cryptography, or network security?",
         "tags": ["security_cert_prep", "hands_on_red_team_labs"],
         "responses": LIKERT,
         "followups": {
@@ -479,40 +478,29 @@ questions = {
     },
 
     "q_hardware": {
-        "text": "Does your programme involve hardware, embedded systems, or physical computing?",
+        "text": "Does your work involve actual physical computing hardware — circuit boards, microcontrollers, or embedded systems?",
         "tags": ["embedded_systems_lab", "hardware_integration_projects"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_software_eng": {
-        "text": "Does your programme focus on software engineering, system design, or CI/CD pipelines?",
+        "text": "Do you think a lot about how to build software that works at scale — system architecture, testing pipelines, or engineering best practices?",
         "tags": ["software_engineering_practices", "large_scale_system_design"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_enterprise_it": {
-        "text": "Does your programme cover enterprise IT systems, IT governance, or business-IT alignment?",
+        "text": "Do you study how technology fits inside organisations — aligning IT systems with business goals, governance, or security policy?",
         "tags": ["enterprise_systems_projects", "business_it_alignment"],
         "responses": LIKERT,
         "followups": {},
     },
 
     # ── PHARMACY & HEALTH SCIENCES ────────────────────────────
-    "q_lab_work": {
-        "text": "Does your programme involve significant hands-on laboratory work?",
-        "tags": ["lab_work"],
-        "responses": LIKERT,
-        "followups": {
-            "Definitely Yes": ["q_chemical", "q_health_science"],
-            "Probably Yes":   ["q_chemical"],
-            "Definitely No":  ["q_coding", "q_business"],
-        },
-    },
-
     "q_chemical": {
-        "text": "Does your programme focus on chemistry, biochemistry, or pharmaceutical sciences?",
+        "text": "Do molecules, chemical reactions, or drug compounds feature heavily in your coursework?",
         "tags": ["chemical"],
         "responses": LIKERT,
         "followups": {
@@ -522,7 +510,7 @@ questions = {
     },
 
     "q_pharmacy": {
-        "text": "Does your programme focus specifically on pharmacy, drug formulation, or medicines?",
+        "text": "Is your work specifically about how drugs are made, tested, and safely dispensed to patients?",
         "tags": ["pharmacy_compounding", "drug_formulation_practicum"],
         "responses": LIKERT,
         "followups": {
@@ -531,14 +519,14 @@ questions = {
     },
 
     "q_biochem": {
-        "text": "Does your programme cover biochemistry techniques like enzyme kinetics or protein assays?",
+        "text": "Do you work at the molecular level of living things — things like enzyme reactions, protein structures, or DNA analysis?",
         "tags": ["protein_assays_practicum", "enzyme_kinetics_lab"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_nursing": {
-        "text": "Does your programme focus on nursing, patient care, or clinical placements in hospitals?",
+        "text": "Is a core part of your training spent at a patient's bedside — learning to monitor, care for, and support people who are sick?",
         "tags": ["clinical_placements_long", "patient_care_simulation"],
         "responses": LIKERT,
         "followups": {
@@ -547,7 +535,7 @@ questions = {
     },
 
     "q_epidemiology": {
-        "text": "Does your programme cover public health, disease surveillance, or biostatistics?",
+        "text": "Do you study disease patterns across populations — tracking outbreaks, analysing public health data, or modelling how illness spreads?",
         "tags": ["epidemiology_practice", "public_health_surveillance"],
         "responses": LIKERT,
         "followups": {
@@ -557,7 +545,7 @@ questions = {
 
     # ── HUMANITIES & SOCIAL SCIENCES ─────────────────────────
     "q_psychology": {
-        "text": "Is your programme focused on psychology or mental health?",
+        "text": "Are you studying why people think, feel, and behave the way they do — and how to help when things go wrong mentally or emotionally?",
         "tags": ["social_science", "humanities"],
         "responses": LIKERT,
         "followups": {
@@ -568,7 +556,7 @@ questions = {
     },
 
     "q_clinical_practice": {
-        "text": "Does your programme involve clinical practice, therapy sessions, or direct work with clients/patients?",
+        "text": "Do you actually sit with real clients or patients — having sessions, making assessments, or providing some form of direct care?",
         "tags": ["clinical_practice"],
         "responses": LIKERT,
         "followups": {
@@ -578,14 +566,14 @@ questions = {
     },
 
     "q_family_therapy": {
-        "text": "Does your programme specialise in family systems or couples therapy?",
+        "text": "Is your clinical work focused specifically on relationships — couples, families, or group dynamics — rather than individual therapy?",
         "tags": ["family_therapy_practicum", "systemic_therapy"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_politics": {
-        "text": "Does your programme focus on politics, diplomacy, or international relations?",
+        "text": "Do you spend a lot of time analysing how power works — between nations, governments, or inside global institutions?",
         "tags": ["politics"],
         "responses": LIKERT,
         "followups": {
@@ -595,14 +583,14 @@ questions = {
     },
 
     "q_policy_focus": {
-        "text": "Does your programme focus on policy analysis, governance, or policy simulations?",
+        "text": "Do you study how governments and organisations make big decisions — drafting policies, simulating negotiations, or critiquing governance?",
         "tags": ["policy_focus"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_justice": {
-        "text": "Does your programme focus on criminal justice, law enforcement, or legal systems?",
+        "text": "Is a core interest of your studies the legal system — crime, punishment, courts, or what happens when society tries to fix past wrongs?",
         "tags": ["justice_focus"],
         "responses": LIKERT,
         "followups": {
@@ -612,17 +600,17 @@ questions = {
     },
 
     "q_qualitative": {
-        "text": "Does your programme focus more on qualitative methods, ethnography, or social theory?",
+        "text": "Do you gather insight mostly through interviews, observation, and analysis of text or meaning — rather than surveys and statistics?",
         "tags": ["qualitative"],
         "responses": LIKERT,
         "followups": {
-            "Definitely Yes": ["q_social_science"],
+            "Definitely Yes": ["q_people_focused"],
         },
     },
 
     # ── COMMUNICATION & CREATIVE ARTS ────────────────────────
     "q_portfolio": {
-        "text": "Does your programme require building or presenting a creative portfolio (showreel, articles, artworks)?",
+        "text": "Will you graduate with a portfolio, showreel, or body of creative work that you can actually show to future employers?",
         "tags": ["portfolio"],
         "responses": LIKERT,
         "followups": {
@@ -631,7 +619,7 @@ questions = {
     },
 
     "q_design": {
-        "text": "Does your programme involve visual design, animation, or digital production?",
+        "text": "Do you spend time designing or producing visual content — graphics, animations, motion graphics, or digital art?",
         "tags": ["design"],
         "responses": LIKERT,
         "followups": {
@@ -640,14 +628,14 @@ questions = {
     },
 
     "q_journalism": {
-        "text": "Does your programme focus on journalism, news writing, or investigative reporting?",
+        "text": "Are you learning to find stories, verify facts, and communicate them to a public audience — through articles, broadcasts, or investigations?",
         "tags": ["investigative_reporting", "editorial_workflow"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_studio": {
-        "text": "Does your programme involve studio-based production work (e.g. film set, animation suite)?",
+        "text": "Do you do hands-on production work in a studio environment — on a film set, in an animation lab, or in a broadcast booth?",
         "tags": ["studio"],
         "responses": LIKERT,
         "followups": {
@@ -656,14 +644,14 @@ questions = {
     },
 
     "q_film": {
-        "text": "Does your programme focus specifically on film production, cinematography, or directing?",
+        "text": "Is directing, shooting, or editing film and video at the heart of what you study?",
         "tags": ["cinematography_practicum", "studio_production"],
         "responses": LIKERT,
         "followups": {},
     },
 
     "q_communication_studies": {
-        "text": "Does your programme cover communication theory, media research, or audience analysis at an advanced level?",
+        "text": "Do you study how media shapes public opinion — analysing audiences, framing, editorial strategy, or communication theory at a research level?",
         "tags": ["audience_research_projects", "editorial_strategy_studies"],
         "responses": LIKERT,
         "followups": {
@@ -675,8 +663,6 @@ questions = {
 
 # ─────────────────────────────────────────────────────────────
 # SCHOOL QUESTION POOLS
-# These are the question IDs most useful for narrowing down
-# within each school, used by the question selector.
 # ─────────────────────────────────────────────────────────────
 school_questions = {
     "Chandaria School of Business": [
