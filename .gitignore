@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# .streamlit/secrets.toml
+# ─────────────────────────────────────────────────────────────
+# Copy your values from: Supabase Dashboard → Project Settings → API
+#
+# DO NOT commit this file to GitHub.
+# Add it to .gitignore:   echo ".streamlit/secrets.toml" >> .gitignore
+#
+# For Streamlit Cloud deployment:
+#   App settings → Secrets → paste the contents below
+# ─────────────────────────────────────────────────────────────
+
+[supabase]
+url = "https://eqbmxjyfdnrtkzqizwwz.supabase.co"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxYm14anlmZG5ydGt6cWl6d3d6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0ODAwMjMsImV4cCI6MjA5NDA1NjAyM30.RYJEaEjpbOr-Ixei4HTnJBOvFhfogltCqW3kAQMctTw"
