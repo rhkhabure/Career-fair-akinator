@@ -206,126 +206,102 @@ COURSE_META: Dict[str, Dict] = {
 }
 
 def _course_image_html(name: str, level: str, school: str, conf_pct: int) -> str:
-    """Render a styled course card. Swap to <img> if a real photo file exists."""
+    """Render a styled course card inside st.components.v1.html."""
     import os
-    meta = COURSE_META.get(name, {"icon": "🎓", "color": "#B31B1B"})
+    meta  = COURSE_META.get(name, {"icon": "🎓", "color": "#B31B1B"})
     icon  = meta["icon"]
     color = meta["color"]
 
-    # Check for a real image file (e.g. img_software_engineering.png)
     slug     = name.lower().replace(" ", "_").replace("&", "and").replace("(", "").replace(")", "")
     img_file = f"img_{slug}.png"
     if os.path.exists(img_file):
-        img_tag = f'<img src="{img_file}" style="width:100%;height:180px;object-fit:cover;border-radius:14px 14px 0 0;">'
+        img_tag = f'<img src="{img_file}" style="width:100%;height:160px;object-fit:cover;border-radius:12px 12px 0 0;">'
     else:
-        img_tag = f"""
-        <div style="
-            width:100%; height:180px;
-            background: linear-gradient(135deg, {color}cc, {color}55);
-            border-radius:14px 14px 0 0;
-            display:flex; align-items:center; justify-content:center;
-            font-size:5rem;
-        ">{icon}</div>"""
+        img_tag = f"""<div style="
+            width:100%; height:160px;
+            background:linear-gradient(135deg,{color}cc,{color}44);
+            border-radius:12px 12px 0 0;
+            display:flex;align-items:center;justify-content:center;
+            font-size:4.5rem;">{icon}</div>"""
 
-    return f"""
-    <div style="
-        border-radius:14px;
-        border: 2px solid {color}88;
-        overflow:hidden;
-        box-shadow: 0 8px 32px {color}44;
-        margin-bottom: 1rem;
-    ">
-        {img_tag}
-        <div style="padding:16px 20px; background:#152333;">
-            <div style="font-size:1.35rem; font-weight:800; color:#fff; margin-bottom:4px;">{name}</div>
-            <div style="font-size:0.85rem; color:#a0b4c8; margin-bottom:10px;">{level} · {school}</div>
-            <div style="
-                display:inline-block;
-                background: linear-gradient(90deg, #B31B1B, #F5A623);
-                color:white; font-weight:700; font-size:0.9rem;
-                padding: 4px 14px; border-radius:20px;
-            ">Confidence: {conf_pct}%</div>
-        </div>
-    </div>"""
+    return f"""<!DOCTYPE html><html><head>
+    <style>
+      body{{margin:0;padding:0;background:transparent;font-family:'Segoe UI',Arial,sans-serif;}}
+    </style></head><body>
+    <div style="border-radius:12px;border:2px solid {color}88;overflow:hidden;
+                box-shadow:0 6px 24px {color}44;">
+      {img_tag}
+      <div style="padding:14px 18px;background:#152333;">
+        <div style="font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:3px;">{name}</div>
+        <div style="font-size:0.82rem;color:#a0b4c8;margin-bottom:10px;">{level} · {school}</div>
+        <span style="background:linear-gradient(90deg,#B31B1B,#F5A623);color:#fff;
+                     font-weight:700;font-size:0.88rem;padding:4px 14px;border-radius:20px;">
+          Confidence: {conf_pct}%
+        </span>
+      </div>
+    </div>
+    </body></html>"""
 
 # ─────────────────────────────────────────────────────────────
 # Butterfly + glitter celebration
+# Uses st.markdown to inject directly into the parent page DOM
+# (st.components.v1.html with height=0/1 runs inside an iframe
+#  so position:fixed elements can't escape to the real page).
 # ─────────────────────────────────────────────────────────────
 def show_celebration():
-    st.components.v1.html("""
-    <style>
-    @keyframes flyUp {
-        0%   { transform: translate(0, 0) rotate(0deg) scale(1);   opacity:1; }
-        50%  { transform: translate(var(--dx), -45vh) rotate(var(--rot)) scale(1.2); opacity:0.9; }
-        100% { transform: translate(calc(var(--dx)*1.6), -100vh) rotate(calc(var(--rot)*2)) scale(0.6); opacity:0; }
-    }
-    @keyframes wingFlap {
-        0%, 100% { transform: scaleX(1); }
-        50%       { transform: scaleX(0.4); }
-    }
-    @keyframes glitter {
-        0%   { transform: translate(0,0) rotate(0deg); opacity:1; }
-        100% { transform: translate(var(--gx), var(--gy)) rotate(720deg); opacity:0; }
-    }
-    .butterfly {
-        position:fixed;
-        font-size: var(--size);
-        animation: flyUp var(--dur) ease-in forwards;
-        pointer-events:none;
-        z-index:9999;
-        left: var(--left);
-        bottom: -5vh;
-    }
-    .butterfly-inner { animation: wingFlap 0.35s ease-in-out infinite; }
-    .glitter {
-        position:fixed;
-        width:8px; height:8px;
-        border-radius:50%;
-        background: var(--gc);
-        animation: glitter var(--gdur) ease-out forwards;
-        pointer-events:none;
-        z-index:9998;
-        left: var(--gl); bottom: var(--gb);
-    }
-    </style>
-    <script>
-    (function(){
-        const BUTTERFLIES = ['🦋','🦋','🦋','🌸','🌺','✨','🌟'];
-        const COLORS = ['#F5A623','#B31B1B','#ffffff','#FFE066','#ff88cc','#88ddff','#aaffcc'];
-        const body   = document.body;
-
-        // Butterflies
-        for(let i=0;i<22;i++){
-            const el = document.createElement('div');
-            el.className='butterfly';
-            const left = Math.random()*95;
-            const dx   = (Math.random()-0.5)*60;
-            const rot  = (Math.random()-0.5)*720;
-            const dur  = 2.2 + Math.random()*2.5;
-            const size = (1.4 + Math.random()*1.8)+'rem';
-            el.style.cssText=`--left:${left}vw;--dx:${dx}vw;--rot:${rot}deg;--dur:${dur}s;--size:${size};animation-delay:${Math.random()*1.2}s`;
-            el.innerHTML=`<div class="butterfly-inner">${BUTTERFLIES[Math.floor(Math.random()*BUTTERFLIES.length)]}</div>`;
-            body.appendChild(el);
-            setTimeout(()=>el.remove(),(dur+1.5)*1000);
-        }
-
-        // Glitter
-        for(let i=0;i<60;i++){
-            const el=document.createElement('div');
-            el.className='glitter';
-            const gx=(Math.random()-0.5)*120;
-            const gy=30+Math.random()*80;
-            const gdur=0.8+Math.random()*1.4;
-            const gc=COLORS[Math.floor(Math.random()*COLORS.length)];
-            const gl=Math.random()*98;
-            const gb=Math.random()*40;
-            el.style.cssText=`--gx:${gx}vw;--gy:-${gy}vh;--gdur:${gdur}s;--gc:${gc};--gl:${gl}vw;--gb:${gb}vh;animation-delay:${Math.random()*0.6}s`;
-            body.appendChild(el);
-            setTimeout(()=>el.remove(),(gdur+0.8)*1000);
-        }
-    })();
-    </script>
-    """, height=0)
+    st.balloons()   # native Streamlit balloons — always reliable
+    st.markdown("""
+<style>
+@keyframes bflyUp {
+    0%   { opacity:1; transform:translate(0,0) rotate(0deg) scale(1); }
+    50%  { opacity:.9; transform:translate(var(--dx),-45vh) rotate(var(--rot)) scale(1.2); }
+    100% { opacity:0; transform:translate(calc(var(--dx)*1.6),-105vh) rotate(calc(var(--rot)*2)) scale(.5); }
+}
+@keyframes bWing { 0%,100%{transform:scaleX(1)} 50%{transform:scaleX(.3)} }
+@keyframes sparkle {
+    0%  { opacity:1; transform:translate(0,0) rotate(0deg); }
+    100%{ opacity:0; transform:translate(var(--sx),var(--sy)) rotate(720deg); }
+}
+.bfly {
+    position:fixed; bottom:-6vh; left:var(--bl);
+    font-size:var(--bs); pointer-events:none; z-index:99999;
+    animation: bflyUp var(--bd) ease-in forwards var(--bdelay);
+}
+.bfly-inner { display:inline-block; animation: bWing .35s ease-in-out infinite; }
+.spark {
+    position:fixed; width:9px; height:9px; border-radius:50%;
+    background:var(--sc); pointer-events:none; z-index:99998;
+    left:var(--sl); bottom:var(--sb);
+    animation: sparkle var(--sd) ease-out forwards var(--sdelay);
+}
+</style>
+<script>
+(function(){
+  const EMOJIS=['🦋','🦋','🦋','🌸','🌺','✨','🌟','💛'];
+  const COLORS=['#F5A623','#B31B1B','#fff','#FFE066','#ff88cc','#88ddff','#aaffcc','#ffaa44'];
+  for(let i=0;i<24;i++){
+    const e=document.createElement('div');
+    e.className='bfly';
+    const bl=Math.random()*94, dx=(Math.random()-.5)*55, rot=(Math.random()-.5)*700;
+    const bd=2.3+Math.random()*2.4, bs=(1.3+Math.random()*1.9)+'rem', bdelay=Math.random()*1.3+'s';
+    e.style.cssText=`--bl:${bl}vw;--dx:${dx}vw;--rot:${rot}deg;--bd:${bd}s;--bs:${bs};--bdelay:${bdelay}`;
+    e.innerHTML=`<div class="bfly-inner">${EMOJIS[Math.floor(Math.random()*EMOJIS.length)]}</div>`;
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),(bd+parseFloat(bdelay)+1.5)*1000);
+  }
+  for(let i=0;i<70;i++){
+    const s=document.createElement('div');
+    s.className='spark';
+    const sx=(Math.random()-.5)*130+'vw', sy='-'+(35+Math.random()*75)+'vh';
+    const sd=.8+Math.random()*1.5, sc=COLORS[Math.floor(Math.random()*COLORS.length)];
+    const sl=Math.random()*97+'vw', sb=Math.random()*35+'vh', sdelay=Math.random()*.7+'s';
+    s.style.cssText=`--sx:${sx};--sy:${sy};--sd:${sd}s;--sc:${sc};--sl:${sl};--sb:${sb};--sdelay:${sdelay}`;
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),(sd+parseFloat(sdelay)+.8)*1000);
+  }
+})();
+</script>
+""", unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -646,11 +622,10 @@ if st.session_state.page == "guess":
     </div>
     """, unsafe_allow_html=True)
 
-    # Course card
-    st.markdown(
-        _course_image_html(best["name"], best["level"], best["school"], conf_pct),
-        unsafe_allow_html=True
-    )
+    # Course card — use components.html so the HTML is rendered inside
+    # its own iframe and never interpreted as a markdown code block
+    card_html = _course_image_html(best["name"], best["level"], best["school"], conf_pct)
+    st.components.v1.html(card_html.strip(), height=280, scrolling=False)
 
     # Runner-up
     if len(top3) > 1:
