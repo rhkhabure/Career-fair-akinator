@@ -1,6 +1,6 @@
 """
-usiu_akinator.py  — USIU Career Fair Akinator
-Redesigned with USIU brand colours, course cards, and butterfly celebration.
+usiu_akinator.py — USIU Career Fair Akinator
+Mascot: Kofi the Griot-Scholar (kofi.py)
 """
 
 import streamlit as st
@@ -13,12 +13,12 @@ from bayes_engine import (
     top_candidates, confidence_of_top, estimate_eig_bayes,
     compute_attr_boosts, build_program_priors,
     record_success, record_failure,
-    CONFUSION_PREFIX, PROGRAM_FREQ_PREFIX,
 )
 from db import (
     load_learning_counts, save_learning_counts, save_game_result,
     fetch_game_stats, fetch_confusion_pairs, is_supabase_configured,
 )
+from kofi import kofi_html
 
 # ─────────────────────────────────────────────────────────────
 # Config
@@ -29,272 +29,171 @@ MAX_QUESTIONS        = 10
 MAX_QUESTIONS_EXT    = 13
 
 st.set_page_config(
-    page_title="USIU Akinator 🦉",
+    page_title="USIU Akinator 🥁",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
 
 # ─────────────────────────────────────────────────────────────
-# USIU Brand colours & global CSS
-# Primary: Crimson  #B31B1B
-# Secondary: Gold   #F5A623
-# Accent: Deep navy #0D1B2A
+# Global CSS
 # ─────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-/* ── Google Font ───────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-}
-
-/* ── Page background ───────────────────────────────────── */
-.stApp {
-    background: linear-gradient(145deg, #0D1B2A 0%, #1a2a3a 100%);
-    min-height: 100vh;
-}
-
-/* ── Sidebar ───────────────────────────────────────────── */
-section[data-testid="stSidebar"] {
-    background: #111e2b !important;
-    border-right: 1px solid #1e3044;
-}
-
-/* ── Headings ──────────────────────────────────────────── */
-h1 { color: #FFFFFF !important; font-weight: 800 !important; }
-h2, h3 { color: #F5A623 !important; font-weight: 700 !important; }
-p, li, label { color: #d0dde8 !important; }
-
-/* ── Progress bar ──────────────────────────────────────── */
+html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+.stApp { background: linear-gradient(145deg,#0D1B2A 0%,#1a2a3a 100%); min-height:100vh; }
+section[data-testid="stSidebar"] { background:#111e2b !important; border-right:1px solid #1e3044; }
+h1 { color:#FFFFFF !important; font-weight:800 !important; }
+h2, h3 { color:#F5A623 !important; font-weight:700 !important; }
+p, li, label { color:#d0dde8 !important; }
 div[data-testid="stProgress"] > div > div {
-    background: linear-gradient(90deg, #B31B1B, #F5A623) !important;
-    border-radius: 10px;
-}
-div[data-testid="stProgress"] > div {
-    background: #1e3044 !important;
-    border-radius: 10px;
-}
-
-/* ── Radio buttons ─────────────────────────────────────── */
+    background:linear-gradient(90deg,#B31B1B,#F5A623) !important; border-radius:10px; }
+div[data-testid="stProgress"] > div { background:#1e3044 !important; border-radius:10px; }
 div[data-testid="stRadio"] label {
-    background: #1a2e42 !important;
-    border: 1px solid #2a4060 !important;
-    border-radius: 10px !important;
-    padding: 10px 18px !important;
-    margin: 4px 0 !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    color: #d0dde8 !important;
-}
+    background:#1a2e42 !important; border:1px solid #2a4060 !important;
+    border-radius:10px !important; padding:10px 18px !important;
+    margin:4px 0 !important; cursor:pointer !important;
+    transition:all 0.2s !important; color:#d0dde8 !important; }
 div[data-testid="stRadio"] label:hover {
-    border-color: #F5A623 !important;
-    background: #1e3650 !important;
-    color: #F5A623 !important;
-}
-
-/* ── Primary button (Play / Correct) ───────────────────── */
+    border-color:#F5A623 !important; background:#1e3650 !important; color:#F5A623 !important; }
 div[data-testid="stButton"] button[kind="primary"] {
-    background: linear-gradient(135deg, #B31B1B, #cc2222) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-    font-size: 1.05rem !important;
-    padding: 0.6rem 1.8rem !important;
-    box-shadow: 0 4px 15px rgba(179,27,27,0.4) !important;
-    transition: all 0.2s !important;
-}
+    background:linear-gradient(135deg,#B31B1B,#cc2222) !important;
+    color:white !important; border:none !important; border-radius:12px !important;
+    font-weight:700 !important; font-size:1.05rem !important;
+    padding:0.6rem 1.8rem !important;
+    box-shadow:0 4px 15px rgba(179,27,27,.4) !important; transition:all .2s !important; }
 div[data-testid="stButton"] button[kind="primary"]:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(179,27,27,0.55) !important;
-}
-
-/* ── Secondary button ───────────────────────────────────── */
+    transform:translateY(-2px) !important; box-shadow:0 6px 20px rgba(179,27,27,.55) !important; }
 div[data-testid="stButton"] button[kind="secondary"] {
-    background: #1a2e42 !important;
-    color: #d0dde8 !important;
-    border: 1px solid #2a4060 !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    transition: all 0.2s !important;
-}
+    background:#1a2e42 !important; color:#d0dde8 !important;
+    border:1px solid #2a4060 !important; border-radius:12px !important;
+    font-weight:600 !important; transition:all .2s !important; }
 div[data-testid="stButton"] button[kind="secondary"]:hover {
-    border-color: #F5A623 !important;
-    color: #F5A623 !important;
-}
-
-/* ── Expander ───────────────────────────────────────────── */
-details {
-    background: #152333 !important;
-    border: 1px solid #1e3044 !important;
-    border-radius: 12px !important;
-}
-details summary {
-    color: #a0b4c8 !important;
-    font-size: 0.9rem !important;
-}
-
-/* ── Success box ────────────────────────────────────────── */
-div[data-testid="stAlert"] {
-    border-radius: 14px !important;
-}
-
-/* ── Divider ────────────────────────────────────────────── */
-hr { border-color: #1e3044 !important; }
-
-/* ── Metric ─────────────────────────────────────────────── */
+    border-color:#F5A623 !important; color:#F5A623 !important; }
+details { background:#152333 !important; border:1px solid #1e3044 !important; border-radius:12px !important; }
+details summary { color:#a0b4c8 !important; font-size:.9rem !important; }
+hr { border-color:#1e3044 !important; }
 div[data-testid="stMetric"] {
-    background: #152333;
-    border-radius: 10px;
-    padding: 10px;
-    border: 1px solid #1e3044;
-}
+    background:#152333; border-radius:10px; padding:10px; border:1px solid #1e3044; }
 </style>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────
-# Course card metadata  — emoji icon + school colour
-# Drop a real image file named e.g. "img_software_engineering.png"
-# into your repo and it will be used automatically.
+# Course card
 # ─────────────────────────────────────────────────────────────
 COURSE_META: Dict[str, Dict] = {
-    # Chandaria
-    "International Business Administration": {"icon": "🌍", "color": "#B31B1B"},
-    "Accounting":                            {"icon": "📊", "color": "#B31B1B"},
-    "Finance":                               {"icon": "💹", "color": "#B31B1B"},
-    "Hotel & Restaurant Management":         {"icon": "🏨", "color": "#B31B1B"},
-    "Business Administration (MBA)":         {"icon": "💼", "color": "#B31B1B"},
-    "Global Leadership & Management":        {"icon": "🧭", "color": "#B31B1B"},
-    "Global Banking and Finance":            {"icon": "🏦", "color": "#B31B1B"},
-    "Global Business Management":            {"icon": "🌐", "color": "#B31B1B"},
-    "Health Leadership and Management":      {"icon": "🏥", "color": "#B31B1B"},
-    "Management and Organizational Development": {"icon": "🔄", "color": "#B31B1B"},
-    "Doctor of Business Administration":     {"icon": "🎓", "color": "#B31B1B"},
-    # Humanities & Social Sciences
-    "International Relations":               {"icon": "🕊️", "color": "#1a6b3c"},
-    "Psychology":                            {"icon": "🧠", "color": "#1a6b3c"},
-    "Criminal Justice Studies":              {"icon": "⚖️", "color": "#1a6b3c"},
-    "Sociology":                             {"icon": "👥", "color": "#1a6b3c"},
-    "Criminal and Transitional Justice":     {"icon": "🔏", "color": "#1a6b3c"},
-    "Clinical Psychology":                   {"icon": "🛋️", "color": "#1a6b3c"},
-    "Counseling Psychology":                 {"icon": "💬", "color": "#1a6b3c"},
-    "International Relations (MA)":          {"icon": "🗺️", "color": "#1a6b3c"},
-    "Marriage and Family Therapy":           {"icon": "❤️", "color": "#1a6b3c"},
-    "PhD International Relations":           {"icon": "📜", "color": "#1a6b3c"},
-    "Doctor of Psychology (Clinical)":       {"icon": "🔬", "color": "#1a6b3c"},
-    # Science & Technology
-    "Applied Computer Technology":           {"icon": "🖥️", "color": "#1a4a8a"},
-    "Information Systems & Technology":      {"icon": "🗄️", "color": "#1a4a8a"},
-    "Data Science & Analytics":              {"icon": "📈", "color": "#1a4a8a"},
-    "Artificial Intelligence & Robotics":    {"icon": "🤖", "color": "#1a4a8a"},
-    "Software Engineering":                  {"icon": "⚙️", "color": "#1a4a8a"},
-    "Information Security":                  {"icon": "🔐", "color": "#1a4a8a"},
-    "Information Systems and Technology":    {"icon": "🌐", "color": "#1a4a8a"},
-    # Pharmacy & Health Sciences
-    "Bachelor of Pharmacy":                  {"icon": "💊", "color": "#6b1a6b"},
-    "Nursing":                               {"icon": "🩺", "color": "#6b1a6b"},
-    "Epidemiology & Biostatistics":          {"icon": "📋", "color": "#6b1a6b"},
-    "Analytical Chemistry":                  {"icon": "🧪", "color": "#6b1a6b"},
-    "Applied Biochemistry":                  {"icon": "🧬", "color": "#6b1a6b"},
-    "Clinical Pharmacology and Therapeutics":{"icon": "🔭", "color": "#6b1a6b"},
-    # Creative Arts
-    "Journalism":                            {"icon": "📰", "color": "#7a5c00"},
-    "Animation":                             {"icon": "🎨", "color": "#7a5c00"},
-    "Film Production & Directing":           {"icon": "🎬", "color": "#7a5c00"},
-    "Communication Studies":                 {"icon": "📡", "color": "#7a5c00"},
+    "International Business Administration": {"icon":"🌍","color":"#B31B1B"},
+    "Accounting":                            {"icon":"📊","color":"#B31B1B"},
+    "Finance":                               {"icon":"💹","color":"#B31B1B"},
+    "Hotel & Restaurant Management":         {"icon":"🏨","color":"#B31B1B"},
+    "Business Administration (MBA)":         {"icon":"💼","color":"#B31B1B"},
+    "Global Leadership & Management":        {"icon":"🧭","color":"#B31B1B"},
+    "Global Banking and Finance":            {"icon":"🏦","color":"#B31B1B"},
+    "Global Business Management":           {"icon":"🌐","color":"#B31B1B"},
+    "Health Leadership and Management":      {"icon":"🏥","color":"#B31B1B"},
+    "Management and Organizational Development": {"icon":"🔄","color":"#B31B1B"},
+    "Doctor of Business Administration":     {"icon":"🎓","color":"#B31B1B"},
+    "International Relations":               {"icon":"🕊️","color":"#1a6b3c"},
+    "Psychology":                            {"icon":"🧠","color":"#1a6b3c"},
+    "Criminal Justice Studies":              {"icon":"⚖️","color":"#1a6b3c"},
+    "Sociology":                             {"icon":"👥","color":"#1a6b3c"},
+    "Criminal and Transitional Justice":     {"icon":"🔏","color":"#1a6b3c"},
+    "Clinical Psychology":                   {"icon":"🛋️","color":"#1a6b3c"},
+    "Counseling Psychology":                 {"icon":"💬","color":"#1a6b3c"},
+    "International Relations (MA)":          {"icon":"🗺️","color":"#1a6b3c"},
+    "Marriage and Family Therapy":           {"icon":"❤️","color":"#1a6b3c"},
+    "PhD International Relations":           {"icon":"📜","color":"#1a6b3c"},
+    "Doctor of Psychology (Clinical)":       {"icon":"🔬","color":"#1a6b3c"},
+    "Applied Computer Technology":           {"icon":"🖥️","color":"#1a4a8a"},
+    "Information Systems & Technology":      {"icon":"🗄️","color":"#1a4a8a"},
+    "Data Science & Analytics":              {"icon":"📈","color":"#1a4a8a"},
+    "Artificial Intelligence & Robotics":    {"icon":"🤖","color":"#1a4a8a"},
+    "Software Engineering":                  {"icon":"⚙️","color":"#1a4a8a"},
+    "Information Security":                  {"icon":"🔐","color":"#1a4a8a"},
+    "Information Systems and Technology":    {"icon":"🌐","color":"#1a4a8a"},
+    "Bachelor of Pharmacy":                  {"icon":"💊","color":"#6b1a6b"},
+    "Nursing":                               {"icon":"🩺","color":"#6b1a6b"},
+    "Epidemiology & Biostatistics":          {"icon":"📋","color":"#6b1a6b"},
+    "Analytical Chemistry":                  {"icon":"🧪","color":"#6b1a6b"},
+    "Applied Biochemistry":                  {"icon":"🧬","color":"#6b1a6b"},
+    "Clinical Pharmacology and Therapeutics":{"icon":"🔭","color":"#6b1a6b"},
+    "Journalism":                            {"icon":"📰","color":"#7a5c00"},
+    "Animation":                             {"icon":"🎨","color":"#7a5c00"},
+    "Film Production & Directing":           {"icon":"🎬","color":"#7a5c00"},
+    "Communication Studies":                 {"icon":"📡","color":"#7a5c00"},
 }
 
-def _course_image_html(name: str, level: str, school: str, conf_pct: int) -> str:
-    """Render a styled course card inside st.components.v1.html."""
+def _course_card_html(name: str, level: str, school: str, conf_pct: int) -> str:
     import os
-    meta  = COURSE_META.get(name, {"icon": "🎓", "color": "#B31B1B"})
+    meta  = COURSE_META.get(name, {"icon":"🎓","color":"#B31B1B"})
     icon  = meta["icon"]
     color = meta["color"]
-
-    slug     = name.lower().replace(" ", "_").replace("&", "and").replace("(", "").replace(")", "")
+    slug  = name.lower().replace(" ","_").replace("&","and").replace("(","").replace(")","")
     img_file = f"img_{slug}.png"
     if os.path.exists(img_file):
-        img_tag = f'<img src="{img_file}" style="width:100%;height:160px;object-fit:cover;border-radius:12px 12px 0 0;">'
+        banner = f'<img src="{img_file}" style="width:100%;height:160px;object-fit:cover;border-radius:12px 12px 0 0;">'
     else:
-        img_tag = f"""<div style="
-            width:100%; height:160px;
-            background:linear-gradient(135deg,{color}cc,{color}44);
-            border-radius:12px 12px 0 0;
-            display:flex;align-items:center;justify-content:center;
-            font-size:4.5rem;">{icon}</div>"""
-
-    return f"""<!DOCTYPE html><html><head>
-    <style>
-      body{{margin:0;padding:0;background:transparent;font-family:'Segoe UI',Arial,sans-serif;}}
-    </style></head><body>
-    <div style="border-radius:12px;border:2px solid {color}88;overflow:hidden;
-                box-shadow:0 6px 24px {color}44;">
-      {img_tag}
-      <div style="padding:14px 18px;background:#152333;">
-        <div style="font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:3px;">{name}</div>
-        <div style="font-size:0.82rem;color:#a0b4c8;margin-bottom:10px;">{level} · {school}</div>
-        <span style="background:linear-gradient(90deg,#B31B1B,#F5A623);color:#fff;
-                     font-weight:700;font-size:0.88rem;padding:4px 14px;border-radius:20px;">
-          Confidence: {conf_pct}%
-        </span>
-      </div>
-    </div>
-    </body></html>"""
+        banner = (
+            f'<div style="width:100%;height:160px;'
+            f'background:linear-gradient(135deg,{color}cc,{color}44);'
+            f'border-radius:12px 12px 0 0;display:flex;align-items:center;'
+            f'justify-content:center;font-size:4.5rem;">{icon}</div>'
+        )
+    return (
+        f'<!DOCTYPE html><html><head>'
+        f'<style>body{{margin:0;padding:0;background:transparent;'
+        f'font-family:"Segoe UI",Arial,sans-serif;}}</style></head><body>'
+        f'<div style="border-radius:12px;border:2px solid {color}88;overflow:hidden;'
+        f'box-shadow:0 6px 24px {color}44;">'
+        f'{banner}'
+        f'<div style="padding:14px 18px;background:#152333;">'
+        f'<div style="font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:3px;">{name}</div>'
+        f'<div style="font-size:0.82rem;color:#a0b4c8;margin-bottom:10px;">{level} · {school}</div>'
+        f'<span style="background:linear-gradient(90deg,#B31B1B,#F5A623);color:#fff;'
+        f'font-weight:700;font-size:0.88rem;padding:4px 14px;border-radius:20px;">'
+        f'Confidence: {conf_pct}%</span>'
+        f'</div></div></body></html>'
+    )
 
 # ─────────────────────────────────────────────────────────────
-# Butterfly + glitter celebration
-# Uses st.markdown to inject directly into the parent page DOM
-# (st.components.v1.html with height=0/1 runs inside an iframe
-#  so position:fixed elements can't escape to the real page).
+# Celebration  (butterflies + glitter via st.markdown)
 # ─────────────────────────────────────────────────────────────
 def show_celebration():
-    st.balloons()   # native Streamlit balloons — always reliable
+    st.balloons()
     st.markdown("""
 <style>
-@keyframes bflyUp {
-    0%   { opacity:1; transform:translate(0,0) rotate(0deg) scale(1); }
-    50%  { opacity:.9; transform:translate(var(--dx),-45vh) rotate(var(--rot)) scale(1.2); }
-    100% { opacity:0; transform:translate(calc(var(--dx)*1.6),-105vh) rotate(calc(var(--rot)*2)) scale(.5); }
-}
-@keyframes bWing { 0%,100%{transform:scaleX(1)} 50%{transform:scaleX(.3)} }
-@keyframes sparkle {
-    0%  { opacity:1; transform:translate(0,0) rotate(0deg); }
-    100%{ opacity:0; transform:translate(var(--sx),var(--sy)) rotate(720deg); }
-}
-.bfly {
-    position:fixed; bottom:-6vh; left:var(--bl);
-    font-size:var(--bs); pointer-events:none; z-index:99999;
-    animation: bflyUp var(--bd) ease-in forwards var(--bdelay);
-}
-.bfly-inner { display:inline-block; animation: bWing .35s ease-in-out infinite; }
-.spark {
-    position:fixed; width:9px; height:9px; border-radius:50%;
-    background:var(--sc); pointer-events:none; z-index:99998;
-    left:var(--sl); bottom:var(--sb);
-    animation: sparkle var(--sd) ease-out forwards var(--sdelay);
-}
+@keyframes bflyUp{0%{opacity:1;transform:translate(0,0)rotate(0)scale(1)}
+  50%{opacity:.9;transform:translate(var(--dx),-45vh)rotate(var(--rot))scale(1.2)}
+  100%{opacity:0;transform:translate(calc(var(--dx)*1.6),-105vh)rotate(calc(var(--rot)*2))scale(.5)}}
+@keyframes bWing{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.3)}}
+@keyframes sparkle{0%{opacity:1;transform:translate(0,0)rotate(0)}
+  100%{opacity:0;transform:translate(var(--sx),var(--sy))rotate(720deg)}}
+.bfly{position:fixed;bottom:-6vh;left:var(--bl);font-size:var(--bs);
+  pointer-events:none;z-index:99999;
+  animation:bflyUp var(--bd) ease-in forwards var(--bdelay);}
+.bfly-inner{display:inline-block;animation:bWing .35s ease-in-out infinite;}
+.spark{position:fixed;width:9px;height:9px;border-radius:50%;background:var(--sc);
+  pointer-events:none;z-index:99998;left:var(--sl);bottom:var(--sb);
+  animation:sparkle var(--sd) ease-out forwards var(--sdelay);}
 </style>
 <script>
 (function(){
-  const EMOJIS=['🦋','🦋','🦋','🌸','🌺','✨','🌟','💛'];
-  const COLORS=['#F5A623','#B31B1B','#fff','#FFE066','#ff88cc','#88ddff','#aaffcc','#ffaa44'];
+  const E=['🦋','🦋','🦋','🌸','🌺','✨','🌟','💛','🥁'];
+  const C=['#F5A623','#B31B1B','#fff','#FFE066','#ff88cc','#88ddff','#aaffcc','#ffaa44','#2D6A4F'];
   for(let i=0;i<24;i++){
-    const e=document.createElement('div');
-    e.className='bfly';
-    const bl=Math.random()*94, dx=(Math.random()-.5)*55, rot=(Math.random()-.5)*700;
-    const bd=2.3+Math.random()*2.4, bs=(1.3+Math.random()*1.9)+'rem', bdelay=Math.random()*1.3+'s';
+    const e=document.createElement('div'); e.className='bfly';
+    const bl=Math.random()*94,dx=(Math.random()-.5)*55,rot=(Math.random()-.5)*700;
+    const bd=2.3+Math.random()*2.4,bs=(1.3+Math.random()*1.9)+'rem',bdelay=Math.random()*1.3+'s';
     e.style.cssText=`--bl:${bl}vw;--dx:${dx}vw;--rot:${rot}deg;--bd:${bd}s;--bs:${bs};--bdelay:${bdelay}`;
-    e.innerHTML=`<div class="bfly-inner">${EMOJIS[Math.floor(Math.random()*EMOJIS.length)]}</div>`;
+    e.innerHTML=`<div class="bfly-inner">${E[Math.floor(Math.random()*E.length)]}</div>`;
     document.body.appendChild(e);
     setTimeout(()=>e.remove(),(bd+parseFloat(bdelay)+1.5)*1000);
   }
   for(let i=0;i<70;i++){
-    const s=document.createElement('div');
-    s.className='spark';
-    const sx=(Math.random()-.5)*130+'vw', sy='-'+(35+Math.random()*75)+'vh';
-    const sd=.8+Math.random()*1.5, sc=COLORS[Math.floor(Math.random()*COLORS.length)];
-    const sl=Math.random()*97+'vw', sb=Math.random()*35+'vh', sdelay=Math.random()*.7+'s';
+    const s=document.createElement('div'); s.className='spark';
+    const sx=(Math.random()-.5)*130+'vw',sy='-'+(35+Math.random()*75)+'vh';
+    const sd=.8+Math.random()*1.5,sc=C[Math.floor(Math.random()*C.length)];
+    const sl=Math.random()*97+'vw',sb=Math.random()*35+'vh',sdelay=Math.random()*.7+'s';
     s.style.cssText=`--sx:${sx};--sy:${sy};--sd:${sd}s;--sc:${sc};--sl:${sl};--sb:${sb};--sdelay:${sdelay}`;
     document.body.appendChild(s);
     setTimeout(()=>s.remove(),(sd+parseFloat(sdelay)+.8)*1000);
@@ -302,7 +201,6 @@ def show_celebration():
 })();
 </script>
 """, unsafe_allow_html=True)
-
 
 # ─────────────────────────────────────────────────────────────
 # Data
@@ -332,9 +230,8 @@ def recompute_candidates(path, log_prior, attr_boost):
 def question_splits_candidates(candidates, qid):
     tags = questions.get(qid, {}).get("tags", [qid])
     for tag in tags:
-        w  = candidates[candidates["attributes"].apply(lambda a: tag in a)]
-        wo = candidates[candidates["attributes"].apply(lambda a: tag not in a)]
-        if len(w) > 0 and len(wo) > 0:
+        if (candidates["attributes"].apply(lambda a: tag in a).any() and
+                candidates["attributes"].apply(lambda a: tag not in a).any()):
             return True
     return False
 
@@ -366,37 +263,32 @@ def select_next_question(candidates, asked_qids, history_pairs, attr_boost):
     pending = get_pending_followup(asked_qids, history_pairs)
     if pending:
         return pending
-
     eig_scores = {}
     for qid in questions:
         if qid in asked_qids or not question_splits_candidates(candidates, qid):
             continue
         attr = get_attr_for_qid(qid)
         eig_scores[qid] = estimate_eig_bayes(candidates, attr, attr_boost)
-
     if not eig_scores:
         for qid in questions:
             if qid not in asked_qids:
                 return qid
         return None
-
     top_school = infer_top_school(candidates)
     if top_school:
         pool_eig = {q: eig_scores[q] for q in school_questions.get(top_school, []) if q in eig_scores}
         if pool_eig:
-            best_pool   = max(pool_eig, key=pool_eig.get)
+            best_pool = max(pool_eig, key=pool_eig.get)
             best_global = max(eig_scores, key=eig_scores.get)
             if eig_scores[best_pool] >= 0.8 * eig_scores[best_global]:
                 return best_pool
-
     return max(eig_scores, key=eig_scores.get)
-
 
 # ─────────────────────────────────────────────────────────────
 # Session init / reset
 # ─────────────────────────────────────────────────────────────
 def _init_session():
-    counts     = load_learning_counts()
+    counts    = load_learning_counts()
     attr_boost = compute_attr_boosts(counts)
     log_prior  = build_program_priors(counts, PROGRAM_NAMES)
     st.session_state.page            = "landing"
@@ -421,7 +313,7 @@ if st.session_state.get("_needs_rerun", False):
     st.rerun()
 
 def _reset_game():
-    counts     = load_learning_counts()
+    counts    = load_learning_counts()
     attr_boost = compute_attr_boosts(counts)
     log_prior  = build_program_priors(counts, PROGRAM_NAMES)
     st.session_state.learning_counts = counts
@@ -446,13 +338,16 @@ def _reset_game():
 # LANDING PAGE
 # ═════════════════════════════════════════════════════════════
 if st.session_state.page == "landing":
+    # Kofi — large, idle float
+    st.components.v1.html(kofi_html("idle"), height=310, scrolling=False)
+
     st.markdown("""
-    <div style="text-align:center; padding: 3rem 1rem 1.5rem;">
-        <div style="font-size:5rem; margin-bottom:0.5rem;">🦉</div>
-        <h1 style="font-size:2.4rem; margin-bottom:0.4rem;">USIU Career Fair Akinator</h1>
-        <p style="font-size:1.1rem; color:#a0b4c8; max-width:480px; margin:0 auto 2rem;">
+    <div style="text-align:center; padding:.5rem 1rem 1.5rem;">
+        <h1 style="font-size:2.3rem; margin-bottom:.4rem;">USIU Career Fair Akinator</h1>
+        <p style="font-size:1.05rem; color:#a0b4c8; max-width:460px; margin:0 auto 1.8rem;">
             Think of your <strong style="color:#F5A623;">degree programme</strong> at USIU-Africa.<br>
-            I'll try to guess it in <strong style="color:#F5A623;">10 questions or fewer!</strong>
+            Kofi will try to guess it in
+            <strong style="color:#F5A623;">10 questions or fewer!</strong>
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -473,7 +368,6 @@ def handle_answer(qid: str, q_index: int):
     response = st.session_state.get(key)
     if response is None or q_index != len(st.session_state.asked_qids):
         return
-
     attr = get_attr_for_qid(qid)
     st.session_state.candidates = update_log_scores(
         st.session_state.candidates, attr, response, st.session_state.attr_boost
@@ -481,10 +375,8 @@ def handle_answer(qid: str, q_index: int):
     st.session_state.asked.append((attr, response))
     st.session_state.asked_qids.append(qid)
     st.session_state.history_pairs.append((qid, response))
-
     n_asked = len(st.session_state.asked_qids)
     conf    = confidence_of_top(st.session_state.candidates)
-
     if n_asked >= MIN_QUESTIONS and conf >= CONFIDENCE_THRESHOLD:
         st.session_state.page = "guess"
     elif n_asked >= st.session_state.max_questions:
@@ -492,7 +384,6 @@ def handle_answer(qid: str, q_index: int):
             st.session_state.max_questions = MAX_QUESTIONS_EXT
         else:
             st.session_state.page = "guess"
-
     st.session_state._needs_rerun = True
 
 
@@ -515,47 +406,52 @@ if st.session_state.page == "questions":
         qmeta   = questions.get(qid, {})
         q_text  = qmeta.get("text", f"Question about {qid}")
 
-        # Progress bar
-        prog = q_index / st.session_state.max_questions
-        st.progress(prog, text=f"Question {q_index + 1} of {st.session_state.max_questions}")
+        # Pick Kofi state based on current confidence
+        conf_now     = confidence_of_top(st.session_state.candidates)
+        kofi_state   = "confident" if (q_index >= MIN_QUESTIONS and conf_now >= 0.45) else "thinking"
 
-        # Question text
+        # Kofi — small, thinking or about-to-guess
+        st.components.v1.html(kofi_html(kofi_state), height=190, scrolling=False)
+
+        # Progress bar
+        st.progress(
+            q_index / st.session_state.max_questions,
+            text=f"Question {q_index + 1} of {st.session_state.max_questions}"
+        )
+
+        # Question card
         st.markdown(f"""
-        <div style="
-            background: #152333;
-            border-left: 4px solid #B31B1B;
-            border-radius: 0 14px 14px 0;
-            padding: 1.2rem 1.5rem;
-            margin: 1rem 0;
-        ">
-            <span style="color:#a0b4c8; font-size:0.8rem; font-weight:600; letter-spacing:1px;">
+        <div style="background:#152333;border-left:4px solid #B31B1B;
+                    border-radius:0 14px 14px 0;padding:1.1rem 1.4rem;margin:.6rem 0;">
+            <span style="color:#a0b4c8;font-size:.78rem;font-weight:600;letter-spacing:1px;">
                 QUESTION {q_index + 1}
             </span>
-            <div style="color:#ffffff; font-size:1.25rem; font-weight:700; margin-top:6px;">
+            <div style="color:#fff;font-size:1.2rem;font-weight:700;margin-top:5px;">
                 {q_text}
             </div>
         </div>
         """, unsafe_allow_html=True)
 
         # Current thinking expander
-        with st.expander("🔍 My current thinking…", expanded=False):
+        with st.expander("🥁 Kofi's current thinking…", expanded=False):
             top3 = top_candidates(st.session_state.candidates, n=3)
             for _, row in top3.iterrows():
                 pct  = int(row["prob"] * 100)
-                meta = COURSE_META.get(row["name"], {"icon": "🎓", "color": "#B31B1B"})
+                meta = COURSE_META.get(row["name"], {"icon":"🎓","color":"#B31B1B"})
                 st.markdown(f"""
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
-                    <span style="font-size:1.2rem;">{meta['icon']}</span>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                    <span style="font-size:1.15rem;">{meta['icon']}</span>
                     <div style="flex:1;">
-                        <div style="color:#fff; font-weight:600; font-size:0.9rem;">
-                            {row['name']} <span style="color:#a0b4c8; font-weight:400;">({row['level']})</span>
+                        <div style="color:#fff;font-weight:600;font-size:.9rem;">
+                            {row['name']}
+                            <span style="color:#a0b4c8;font-weight:400;"> ({row['level']})</span>
                         </div>
-                        <div style="background:#1e3044; border-radius:6px; height:6px; margin-top:4px;">
+                        <div style="background:#1e3044;border-radius:6px;height:6px;margin-top:4px;">
                             <div style="background:linear-gradient(90deg,#B31B1B,#F5A623);
-                                        width:{pct}%; height:6px; border-radius:6px;"></div>
+                                        width:{pct}%;height:6px;border-radius:6px;"></div>
                         </div>
                     </div>
-                    <span style="color:#F5A623; font-weight:700; font-size:0.9rem;">{pct}%</span>
+                    <span style="color:#F5A623;font-weight:700;font-size:.9rem;">{pct}%</span>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -567,10 +463,8 @@ if st.session_state.page == "questions":
         st.radio(
             "Your answer:",
             qmeta.get("responses", ["Definitely Yes","Probably Yes","Neutral","Probably No","Definitely No"]),
-            index=None,
-            key=key,
-            on_change=handle_answer,
-            args=(qid, q_index),
+            index=None, key=key,
+            on_change=handle_answer, args=(qid, q_index),
         )
 
         if st.button("← Go Back", disabled=(q_index == 0)):
@@ -601,53 +495,56 @@ if st.session_state.page == "guess":
     st.session_state.final_guess = best["name"]
     conf_pct = int(best["prob"] * 100)
 
-    # Fire celebration if just confirmed correct
+    # Kofi state depends on whether result is already confirmed
     if st.session_state.get("just_correct"):
         show_celebration()
+        st.components.v1.html(kofi_html("correct"), height=260, scrolling=False)
         st.markdown("""
-        <div style="text-align:center; padding:1rem 0;">
-            <div style="font-size:2rem;">🎉</div>
-            <div style="color:#F5A623; font-size:1.2rem; font-weight:700;">
-                Yes! Got it right!
+        <div style="text-align:center;padding:.5rem 0 1rem;">
+            <div style="font-size:1.7rem;font-weight:700;color:#F5A623;">
+                🥁 BOOM — got it right!
             </div>
-            <div style="color:#a0b4c8; font-size:0.9rem;">Thanks for playing.</div>
+            <div style="color:#a0b4c8;font-size:.9rem;">Thanks for playing.</div>
+        </div>
+        """, unsafe_allow_html=True)
+    elif st.session_state.show_correction:
+        st.components.v1.html(kofi_html("wrong"), height=230, scrolling=False)
+    else:
+        st.components.v1.html(kofi_html("confident"), height=250, scrolling=False)
+
+    # Guess header (only show when not in "just_correct" already showing message)
+    if not st.session_state.get("just_correct"):
+        st.markdown("""
+        <div style="text-align:center;margin-bottom:.8rem;">
+            <span style="font-size:1.8rem;">🎯</span>
+            <h2 style="display:inline;margin-left:8px;">My guess is…</h2>
         </div>
         """, unsafe_allow_html=True)
 
-    # Guess header
-    st.markdown("""
-    <div style="text-align:center; margin-bottom:1rem;">
-        <span style="font-size:2rem;">🎯</span>
-        <h2 style="display:inline; margin-left:8px;">My guess is…</h2>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Course card — use components.html so the HTML is rendered inside
-    # its own iframe and never interpreted as a markdown code block
-    card_html = _course_image_html(best["name"], best["level"], best["school"], conf_pct)
-    st.components.v1.html(card_html.strip(), height=280, scrolling=False)
+    # Course card
+    st.components.v1.html(
+        _course_card_html(best["name"], best["level"], best["school"], conf_pct),
+        height=260, scrolling=False
+    )
 
     # Runner-up
     if len(top3) > 1:
         runner = top3.iloc[1]
-        r_meta = COURSE_META.get(runner["name"], {"icon": "🎓"})
+        r_meta = COURSE_META.get(runner["name"], {"icon":"🎓"})
         st.markdown(f"""
-        <div style="
-            background:#152333; border:1px solid #1e3044;
-            border-radius:10px; padding:10px 16px;
-            display:flex; align-items:center; gap:10px; margin-bottom:1rem;
-        ">
-            <span style="font-size:1.2rem;">{r_meta['icon']}</span>
+        <div style="background:#152333;border:1px solid #1e3044;border-radius:10px;
+                    padding:10px 16px;display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+            <span style="font-size:1.15rem;">{r_meta['icon']}</span>
             <div>
-                <span style="color:#a0b4c8; font-size:0.8rem;">Runner-up</span><br>
-                <span style="color:#d0dde8; font-weight:600;">{runner['name']}</span>
+                <span style="color:#a0b4c8;font-size:.78rem;">Runner-up</span><br>
+                <span style="color:#d0dde8;font-weight:600;">{runner['name']}</span>
                 <span style="color:#a0b4c8;"> ({runner['level']})</span>
-                <span style="color:#F5A623; font-weight:700; margin-left:8px;">{int(runner['prob']*100)}%</span>
+                <span style="color:#F5A623;font-weight:700;margin-left:8px;">{int(runner['prob']*100)}%</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-    # Correct / Wrong buttons
+    # Buttons
     if not st.session_state.get("just_correct") and not st.session_state.show_correction:
         col1, col2 = st.columns(2)
         if col1.button("✅ Yes, correct!", type="primary", use_container_width=True):
@@ -657,10 +554,10 @@ if st.session_state.page == "guess":
             st.session_state.learning_counts = counts
             st.session_state.attr_boost = compute_attr_boosts(counts)
             save_game_result({
-                "type": "SUCCESS", "guess": st.session_state.final_guess,
-                "correct": st.session_state.final_guess, "confidence": conf_pct,
-                "n_questions": len(st.session_state.asked_qids),
-                "path": [list(p) for p in st.session_state.asked],
+                "type":"SUCCESS","guess":st.session_state.final_guess,
+                "correct":st.session_state.final_guess,"confidence":conf_pct,
+                "n_questions":len(st.session_state.asked_qids),
+                "path":[list(p) for p in st.session_state.asked],
             })
             st.session_state.just_correct = True
             st.rerun()
@@ -669,9 +566,9 @@ if st.session_state.page == "guess":
             st.session_state.show_correction = True
             st.rerun()
 
-    # Correction flow
     if st.session_state.show_correction:
-        st.markdown('<div style="color:#F5A623; font-weight:600; margin-bottom:6px;">What is your actual programme?</div>', unsafe_allow_html=True)
+        st.markdown('<div style="color:#F5A623;font-weight:600;margin-bottom:6px;">What is your actual programme?</div>',
+                    unsafe_allow_html=True)
         correct_program = st.selectbox(
             "Select your programme:",
             sorted(df["name"].unique()),
@@ -691,21 +588,21 @@ if st.session_state.page == "guess":
             st.session_state.learning_counts = counts
             st.session_state.attr_boost = compute_attr_boosts(counts)
             save_game_result({
-                "type": "FAIL", "guess": st.session_state.final_guess,
-                "correct": correct_program, "confidence": conf_pct,
-                "n_questions": len(st.session_state.asked_qids),
-                "path": [list(p) for p in st.session_state.asked],
+                "type":"FAIL","guess":st.session_state.final_guess,
+                "correct":correct_program,"confidence":conf_pct,
+                "n_questions":len(st.session_state.asked_qids),
+                "path":[list(p) for p in st.session_state.asked],
             })
             st.session_state.show_correction = False
             st.markdown(f"""
-            <div style="background:#1a2e42; border:1px solid #2a4060; border-radius:10px; padding:12px 16px; margin:8px 0;">
-                <span style="color:#a0b4c8;">Got it — noted as </span>
+            <div style="background:#1a2e42;border:1px solid #2a4060;border-radius:10px;
+                        padding:12px 16px;margin:8px 0;">
+                <span style="color:#a0b4c8;">Kofi says: "I hear you — noted as </span>
                 <strong style="color:#F5A623;">{correct_program}</strong>
-                <span style="color:#a0b4c8;">. I'll learn from this! 🤔</span>
+                <span style="color:#a0b4c8;">. The drum will remember." 🥁</span>
             </div>
             """, unsafe_allow_html=True)
 
-    # Play again
     st.divider()
     col_l2, col_m2, col_r2 = st.columns([2, 1, 2])
     with col_m2:
@@ -719,14 +616,9 @@ if st.session_state.page == "guess":
 # SIDEBAR  — diagnostics
 # ═════════════════════════════════════════════════════════════
 with st.sidebar:
-    st.markdown("""
-    <div style="padding:8px 0 16px;">
-        <span style="font-size:1.2rem; font-weight:700; color:#fff;">🛠 Diagnostics</span>
-    </div>
-    """, unsafe_allow_html=True)
-
-    storage_status = "☁️ Supabase" if is_supabase_configured() else "💾 Local file"
-    st.caption(f"Storage: **{storage_status}**")
+    st.markdown('<div style="padding:8px 0 16px;font-size:1.1rem;font-weight:700;color:#fff;">🥁 Diagnostics</div>',
+                unsafe_allow_html=True)
+    st.caption(f"Storage: **{'☁️ Supabase' if is_supabase_configured() else '💾 Local'}**")
 
     if st.checkbox("Show live stats"):
         stats = fetch_game_stats()
@@ -748,5 +640,4 @@ with st.sidebar:
         st.markdown("**Top attribute signals:**")
         boosts = sorted(st.session_state.attr_boost.items(), key=lambda x: -abs(x[1]))[:8]
         for attr, boost in boosts:
-            sign = "▲" if boost > 0 else "▼"
-            st.write(f"{sign} `{attr}`: {boost:+.2f}")
+            st.write(f"{'▲' if boost>0 else '▼'} `{attr}`: {boost:+.2f}")
