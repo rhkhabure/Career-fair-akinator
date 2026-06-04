@@ -338,8 +338,11 @@ def _reset_game():
 # LANDING PAGE
 # ═════════════════════════════════════════════════════════════
 if st.session_state.page == "landing":
-    # Kofi — large, idle float
-    st.components.v1.html(kofi_html("idle"), height=310, scrolling=False)
+    # Constrain Kofi in a centred column — without this he fills the full
+    # page width (~900px), renders ~1000px tall, and gets cropped by the iframe.
+    _, k_col, _ = st.columns([1, 2, 1])
+    with k_col:
+        st.components.v1.html(kofi_html("idle"), height=430, scrolling=False)
 
     st.markdown("""
     <div style="text-align:center; padding:.5rem 1rem 1.5rem;">
