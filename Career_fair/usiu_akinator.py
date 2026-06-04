@@ -407,65 +407,71 @@ if st.session_state.page == "questions":
         q_text  = qmeta.get("text", f"Question about {qid}")
 
         # Pick Kofi state based on current confidence
-        conf_now     = confidence_of_top(st.session_state.candidates)
-        kofi_state   = "confident" if (q_index >= MIN_QUESTIONS and conf_now >= 0.45) else "thinking"
+        conf_now   = confidence_of_top(st.session_state.candidates)
+        kofi_state = "confident" if (q_index >= MIN_QUESTIONS and conf_now >= 0.45) else "thinking"
 
-        # Kofi — small, thinking or about-to-guess
-        st.components.v1.html(kofi_html(kofi_state), height=190, scrolling=False)
+        # ── Two-column layout: Kofi left, question right ──────
+        col_k, col_q = st.columns([2, 3], gap="medium")
 
-        # Progress bar
-        st.progress(
-            q_index / st.session_state.max_questions,
-            text=f"Question {q_index + 1} of {st.session_state.max_questions}"
-        )
+        with col_k:
+            # Kofi fills the full left column height
+            st.components.v1.html(kofi_html(kofi_state), height=430, scrolling=False)
 
-        # Question card
-        st.markdown(f"""
-        <div style="background:#152333;border-left:4px solid #B31B1B;
-                    border-radius:0 14px 14px 0;padding:1.1rem 1.4rem;margin:.6rem 0;">
-            <span style="color:#a0b4c8;font-size:.78rem;font-weight:600;letter-spacing:1px;">
-                QUESTION {q_index + 1}
-            </span>
-            <div style="color:#fff;font-size:1.2rem;font-weight:700;margin-top:5px;">
-                {q_text}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        with col_q:
+            # Progress bar
+            st.progress(
+                q_index / st.session_state.max_questions,
+                text=f"Question {q_index + 1} of {st.session_state.max_questions}"
+            )
 
-        # Current thinking expander
-        with st.expander("🥁 Kofi's current thinking…", expanded=False):
-            top3 = top_candidates(st.session_state.candidates, n=3)
-            for _, row in top3.iterrows():
-                pct  = int(row["prob"] * 100)
-                meta = COURSE_META.get(row["name"], {"icon":"🎓","color":"#B31B1B"})
-                st.markdown(f"""
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                    <span style="font-size:1.15rem;">{meta['icon']}</span>
-                    <div style="flex:1;">
-                        <div style="color:#fff;font-weight:600;font-size:.9rem;">
-                            {row['name']}
-                            <span style="color:#a0b4c8;font-weight:400;"> ({row['level']})</span>
-                        </div>
-                        <div style="background:#1e3044;border-radius:6px;height:6px;margin-top:4px;">
-                            <div style="background:linear-gradient(90deg,#B31B1B,#F5A623);
-                                        width:{pct}%;height:6px;border-radius:6px;"></div>
-                        </div>
-                    </div>
-                    <span style="color:#F5A623;font-weight:700;font-size:.9rem;">{pct}%</span>
+            # Question card
+            st.markdown(f"""
+            <div style="background:#152333;border-left:4px solid #B31B1B;
+                        border-radius:0 14px 14px 0;padding:1.1rem 1.4rem;margin:.6rem 0;">
+                <span style="color:#a0b4c8;font-size:.75rem;font-weight:600;letter-spacing:1px;">
+                    QUESTION {q_index + 1}
+                </span>
+                <div style="color:#fff;font-size:1.1rem;font-weight:700;margin-top:5px;
+                            line-height:1.45;">
+                    {q_text}
                 </div>
-                """, unsafe_allow_html=True)
+            </div>
+            """, unsafe_allow_html=True)
 
-        # Answer radio
-        key = f"q_{q_index}"
-        if key not in st.session_state:
-            st.session_state[key] = None
+            # Current thinking expander
+            with st.expander("🥁 Kofi's current thinking…", expanded=False):
+                top3 = top_candidates(st.session_state.candidates, n=3)
+                for _, row in top3.iterrows():
+                    pct  = int(row["prob"] * 100)
+                    meta = COURSE_META.get(row["name"], {"icon":"🎓","color":"#B31B1B"})
+                    st.markdown(f"""
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="font-size:1.1rem;">{meta['icon']}</span>
+                        <div style="flex:1;">
+                            <div style="color:#fff;font-weight:600;font-size:.85rem;">
+                                {row['name']}
+                                <span style="color:#a0b4c8;font-weight:400;"> ({row['level']})</span>
+                            </div>
+                            <div style="background:#1e3044;border-radius:6px;height:5px;margin-top:4px;">
+                                <div style="background:linear-gradient(90deg,#B31B1B,#F5A623);
+                                            width:{pct}%;height:5px;border-radius:6px;"></div>
+                            </div>
+                        </div>
+                        <span style="color:#F5A623;font-weight:700;font-size:.85rem;">{pct}%</span>
+                    </div>
+                    """, unsafe_allow_html=True)
 
-        st.radio(
-            "Your answer:",
-            qmeta.get("responses", ["Definitely Yes","Probably Yes","Neutral","Probably No","Definitely No"]),
-            index=None, key=key,
-            on_change=handle_answer, args=(qid, q_index),
-        )
+            # Answer radio
+            key = f"q_{q_index}"
+            if key not in st.session_state:
+                st.session_state[key] = None
+
+            st.radio(
+                "Your answer:",
+                qmeta.get("responses", ["Definitely Yes","Probably Yes","Neutral","Probably No","Definitely No"]),
+                index=None, key=key,
+                on_change=handle_answer, args=(qid, q_index),
+            )
 
         if st.button("← Go Back", disabled=(q_index == 0)):
             if st.session_state.asked_qids:
@@ -495,113 +501,119 @@ if st.session_state.page == "guess":
     st.session_state.final_guess = best["name"]
     conf_pct = int(best["prob"] * 100)
 
-    # Kofi state depends on whether result is already confirmed
-    if st.session_state.get("just_correct"):
-        show_celebration()
-        st.components.v1.html(kofi_html("correct"), height=260, scrolling=False)
-        st.markdown("""
-        <div style="text-align:center;padding:.5rem 0 1rem;">
-            <div style="font-size:1.7rem;font-weight:700;color:#F5A623;">
-                🥁 BOOM — got it right!
-            </div>
-            <div style="color:#a0b4c8;font-size:.9rem;">Thanks for playing.</div>
-        </div>
-        """, unsafe_allow_html=True)
-    elif st.session_state.show_correction:
-        st.components.v1.html(kofi_html("wrong"), height=230, scrolling=False)
-    else:
-        st.components.v1.html(kofi_html("confident"), height=250, scrolling=False)
+    # ── Two-column: Kofi left, result right ──────────────────
+    col_k2, col_r = st.columns([2, 3], gap="medium")
 
-    # Guess header (only show when not in "just_correct" already showing message)
-    if not st.session_state.get("just_correct"):
-        st.markdown("""
-        <div style="text-align:center;margin-bottom:.8rem;">
-            <span style="font-size:1.8rem;">🎯</span>
-            <h2 style="display:inline;margin-left:8px;">My guess is…</h2>
-        </div>
-        """, unsafe_allow_html=True)
+    with col_k2:
+        if st.session_state.get("just_correct"):
+            st.components.v1.html(kofi_html("correct"),    height=430, scrolling=False)
+        elif st.session_state.show_correction:
+            st.components.v1.html(kofi_html("wrong"),      height=430, scrolling=False)
+        else:
+            st.components.v1.html(kofi_html("confident"),  height=430, scrolling=False)
 
-    # Course card
-    st.components.v1.html(
-        _course_card_html(best["name"], best["level"], best["school"], conf_pct),
-        height=260, scrolling=False
-    )
-
-    # Runner-up
-    if len(top3) > 1:
-        runner = top3.iloc[1]
-        r_meta = COURSE_META.get(runner["name"], {"icon":"🎓"})
-        st.markdown(f"""
-        <div style="background:#152333;border:1px solid #1e3044;border-radius:10px;
-                    padding:10px 16px;display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
-            <span style="font-size:1.15rem;">{r_meta['icon']}</span>
-            <div>
-                <span style="color:#a0b4c8;font-size:.78rem;">Runner-up</span><br>
-                <span style="color:#d0dde8;font-weight:600;">{runner['name']}</span>
-                <span style="color:#a0b4c8;"> ({runner['level']})</span>
-                <span style="color:#F5A623;font-weight:700;margin-left:8px;">{int(runner['prob']*100)}%</span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # Buttons
-    if not st.session_state.get("just_correct") and not st.session_state.show_correction:
-        col1, col2 = st.columns(2)
-        if col1.button("✅ Yes, correct!", type="primary", use_container_width=True):
-            counts = st.session_state.learning_counts
-            counts = record_success(counts, st.session_state.final_guess, st.session_state.asked)
-            save_learning_counts(counts)
-            st.session_state.learning_counts = counts
-            st.session_state.attr_boost = compute_attr_boosts(counts)
-            save_game_result({
-                "type":"SUCCESS","guess":st.session_state.final_guess,
-                "correct":st.session_state.final_guess,"confidence":conf_pct,
-                "n_questions":len(st.session_state.asked_qids),
-                "path":[list(p) for p in st.session_state.asked],
-            })
-            st.session_state.just_correct = True
-            st.rerun()
-
-        if col2.button("❌ No, wrong guess", use_container_width=True):
-            st.session_state.show_correction = True
-            st.rerun()
-
-    if st.session_state.show_correction:
-        st.markdown('<div style="color:#F5A623;font-weight:600;margin-bottom:6px;">What is your actual programme?</div>',
-                    unsafe_allow_html=True)
-        correct_program = st.selectbox(
-            "Select your programme:",
-            sorted(df["name"].unique()),
-            key="correction_select",
-            label_visibility="collapsed",
-        )
-        if st.button("Confirm & submit", type="primary"):
-            counts = st.session_state.learning_counts
-            counts = record_failure(
-                counts,
-                guessed_name=st.session_state.final_guess,
-                correct_name=correct_program,
-                path=st.session_state.asked,
-                name_to_attrs=NAME_TO_ATTRS,
-            )
-            save_learning_counts(counts)
-            st.session_state.learning_counts = counts
-            st.session_state.attr_boost = compute_attr_boosts(counts)
-            save_game_result({
-                "type":"FAIL","guess":st.session_state.final_guess,
-                "correct":correct_program,"confidence":conf_pct,
-                "n_questions":len(st.session_state.asked_qids),
-                "path":[list(p) for p in st.session_state.asked],
-            })
-            st.session_state.show_correction = False
-            st.markdown(f"""
-            <div style="background:#1a2e42;border:1px solid #2a4060;border-radius:10px;
-                        padding:12px 16px;margin:8px 0;">
-                <span style="color:#a0b4c8;">Kofi says: "I hear you — noted as </span>
-                <strong style="color:#F5A623;">{correct_program}</strong>
-                <span style="color:#a0b4c8;">. The drum will remember." 🥁</span>
+    with col_r:
+        if st.session_state.get("just_correct"):
+            show_celebration()
+            st.markdown("""
+            <div style="padding:.5rem 0 1rem;">
+                <div style="font-size:1.5rem;font-weight:700;color:#F5A623;">
+                    🥁 BOOM — got it right!
+                </div>
+                <div style="color:#a0b4c8;font-size:.9rem;">Thanks for playing.</div>
             </div>
             """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div style="margin-bottom:.6rem;">
+                <span style="font-size:1.6rem;">🎯</span>
+                <h2 style="display:inline;margin-left:8px;">My guess is…</h2>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # Course card
+        st.components.v1.html(
+            _course_card_html(best["name"], best["level"], best["school"], conf_pct),
+            height=260, scrolling=False
+        )
+
+        # Runner-up
+        if len(top3) > 1:
+            runner = top3.iloc[1]
+            r_meta = COURSE_META.get(runner["name"], {"icon":"🎓"})
+            st.markdown(f"""
+            <div style="background:#152333;border:1px solid #1e3044;border-radius:10px;
+                        padding:9px 14px;display:flex;align-items:center;
+                        gap:10px;margin-bottom:.8rem;">
+                <span style="font-size:1.1rem;">{r_meta['icon']}</span>
+                <div>
+                    <span style="color:#a0b4c8;font-size:.75rem;">Runner-up</span><br>
+                    <span style="color:#d0dde8;font-weight:600;">{runner['name']}</span>
+                    <span style="color:#a0b4c8;"> ({runner['level']})</span>
+                    <span style="color:#F5A623;font-weight:700;margin-left:8px;">{int(runner['prob']*100)}%</span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # Correct / Wrong buttons
+        if not st.session_state.get("just_correct") and not st.session_state.show_correction:
+            c1, c2 = st.columns(2)
+            if c1.button("✅ Yes, correct!", type="primary", use_container_width=True):
+                counts = st.session_state.learning_counts
+                counts = record_success(counts, st.session_state.final_guess, st.session_state.asked)
+                save_learning_counts(counts)
+                st.session_state.learning_counts = counts
+                st.session_state.attr_boost = compute_attr_boosts(counts)
+                save_game_result({
+                    "type":"SUCCESS","guess":st.session_state.final_guess,
+                    "correct":st.session_state.final_guess,"confidence":conf_pct,
+                    "n_questions":len(st.session_state.asked_qids),
+                    "path":[list(p) for p in st.session_state.asked],
+                })
+                st.session_state.just_correct = True
+                st.rerun()
+            if c2.button("❌ No, wrong guess", use_container_width=True):
+                st.session_state.show_correction = True
+                st.rerun()
+
+        if st.session_state.show_correction:
+            st.markdown(
+                '<div style="color:#F5A623;font-weight:600;margin-bottom:6px;">'
+                'What is your actual programme?</div>',
+                unsafe_allow_html=True)
+            correct_program = st.selectbox(
+                "Select your programme:",
+                sorted(df["name"].unique()),
+                key="correction_select",
+                label_visibility="collapsed",
+            )
+            if st.button("Confirm & submit", type="primary"):
+                counts = st.session_state.learning_counts
+                counts = record_failure(
+                    counts,
+                    guessed_name=st.session_state.final_guess,
+                    correct_name=correct_program,
+                    path=st.session_state.asked,
+                    name_to_attrs=NAME_TO_ATTRS,
+                )
+                save_learning_counts(counts)
+                st.session_state.learning_counts = counts
+                st.session_state.attr_boost = compute_attr_boosts(counts)
+                save_game_result({
+                    "type":"FAIL","guess":st.session_state.final_guess,
+                    "correct":correct_program,"confidence":conf_pct,
+                    "n_questions":len(st.session_state.asked_qids),
+                    "path":[list(p) for p in st.session_state.asked],
+                })
+                st.session_state.show_correction = False
+                st.markdown(f"""
+                <div style="background:#1a2e42;border:1px solid #2a4060;border-radius:10px;
+                            padding:12px 16px;margin:8px 0;">
+                    <span style="color:#a0b4c8;">Kofi says: "I hear you — noted as </span>
+                    <strong style="color:#F5A623;">{correct_program}</strong>
+                    <span style="color:#a0b4c8;">. The drum will remember." 🥁</span>
+                </div>
+                """, unsafe_allow_html=True)
 
     st.divider()
     col_l2, col_m2, col_r2 = st.columns([2, 1, 2])
