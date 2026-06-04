@@ -245,7 +245,7 @@ def kofi_html(state: str = "thinking") -> str:
         f"50%{{transform:translateY(-8px)}}75%{{transform:translateY(-16px)}}}}"
         f"@keyframes kfs{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(4px)}}}}"
         f"@keyframes kwv{{0%,100%{{transform:translateY(0);opacity:.5}}50%{{transform:translateY(-10px);opacity:.9}}}}"
-        f".kg{{animation:{an} {ad} ease-in-out infinite;}}"
+        f".kg{{animation:{an} {ad} ease-in-out infinite; transform-box:fill-box; transform-origin:center;}}"
         f".kwv{{animation:kwv 2.6s ease-in-out infinite;}}"
     )
     body = f"{_SHARED}{_eyes(state)}{_mouth(state)}{_rarm(state)}{_larm_drum_fx(state)}"
