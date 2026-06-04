@@ -240,7 +240,7 @@ def kofi_html(state: str = "thinking") -> str:
         f"body{{margin:0;padding:0;background:transparent;overflow:hidden;"
         f"font-family:'Segoe UI',Arial,sans-serif;}}"
         f"@keyframes kff{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(-5px)}}}}"
-        f"@keyframes kft{{0%,100%{{transform:rotate(0)}}30%{{transform:rotate(-3deg)}}70%{{transform:rotate(2deg)}}}}"
+        f"@keyframes kft{{0%,100%{{transform:rotate(0)}}30%{{transform:rotate(-2deg)}}70%{{transform:rotate(1.5deg)}}}}"
         f"@keyframes kfb{{0%,100%{{transform:translateY(0)}}20%{{transform:translateY(-20px)}}"
         f"50%{{transform:translateY(-8px)}}75%{{transform:translateY(-16px)}}}}"
         f"@keyframes kfs{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(4px)}}}}"
@@ -254,7 +254,7 @@ def kofi_html(state: str = "thinking") -> str:
     return (
         f'<!DOCTYPE html><html><head><meta charset="utf-8">'
         f'<style>{css}</style></head><body>'
-        f'<svg width="100%" viewBox="140 10 400 450" xmlns="http://www.w3.org/2000/svg">'
+        f'<svg width="100%" viewBox="148 10 360 415" xmlns="http://www.w3.org/2000/svg">'
         f'<defs>'
         f'<pattern id="kpkm" x="0" y="0" width="20" height="28" patternUnits="userSpaceOnUse">'
         f'<rect width="20" height="28" fill="#B31B1B"/>'
