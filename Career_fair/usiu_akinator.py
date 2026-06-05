@@ -20,6 +20,7 @@ from db import (
 )
 from kofi import kofi_html
 from cv_game import cv_game_html
+from trivia_game import trivia_game_html
 
 # ─────────────────────────────────────────────────────────────
 # Config
@@ -387,6 +388,26 @@ if st.session_state.page == "landing":
             st.session_state.page = "cv_game"
             st.rerun()
 
+    st.markdown("<div style='margin-top:10px;'></div>", unsafe_allow_html=True)
+
+    _, t_col, _ = st.columns([1, 4, 1])
+    with t_col:
+        st.markdown("""
+        <div style="background:#152333;border:2px solid #7aaaff44;border-radius:16px;
+                    padding:1.4rem;text-align:center;">
+            <div style="font-size:2.2rem;margin-bottom:8px;">🎓</div>
+            <div style="font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:6px;">
+                USIU Trivia + Spin to Win
+            </div>
+            <div style="font-size:0.82rem;color:#a0b4c8;line-height:1.45;">
+                8 questions about USIU-Africa. Score 7/8 or 8/8 and spin the wheel
+                to win Ksh 20, 50, 100 or a wristband!
+            </div>
+        </div>""", unsafe_allow_html=True)
+        if st.button("▶ Play Trivia", use_container_width=True, key="btn_tr"):
+            st.session_state.page = "trivia_game"
+            st.rerun()
+
 
 # ═════════════════════════════════════════════════════════════
 # ANSWER CALLBACK
@@ -673,6 +694,30 @@ if st.session_state.page == "cv_game":
 
     st.markdown("<div style='margin-top:8px;'></div>", unsafe_allow_html=True)
     if st.button("← Back to menu", key="cv_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+
+# ═════════════════════════════════════════════════════════════
+# TRIVIA GAME PAGE
+# ═════════════════════════════════════════════════════════════
+if st.session_state.page == "trivia_game":
+    sb_url = sb_key = ""
+    if is_supabase_configured():
+        try:
+            sb_url = st.secrets["supabase"]["url"]
+            sb_key = st.secrets["supabase"]["key"]
+        except Exception:
+            pass
+
+    st.components.v1.html(
+        trivia_game_html(sb_url, sb_key),
+        height=900,
+        scrolling=True,
+    )
+
+    st.markdown("<div style='margin-top:8px;'></div>", unsafe_allow_html=True)
+    if st.button("← Back to menu", key="trivia_back"):
         st.session_state.page = "landing"
         st.rerun()
 
