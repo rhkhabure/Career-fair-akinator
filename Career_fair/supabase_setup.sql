@@ -74,3 +74,70 @@ CREATE POLICY "allow_insert_game_log" ON game_log FOR INSERT WITH CHECK (true);
 --   SELECT * FROM learning_data LIMIT 5;
 --   SELECT * FROM game_log      LIMIT 5;
 -- ============================================================
+
+
+-- ============================================================
+-- Winners table  (CV game + Akinator wins)
+-- Run this in: Supabase Dashboard → SQL Editor → New Query
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS winners (
+    id          BIGSERIAL PRIMARY KEY,
+    name        TEXT NOT NULL,
+    student_id  TEXT,
+    game        TEXT NOT NULL DEFAULT 'cv_errors',   -- 'cv_errors' | 'akinator'
+    score       INTEGER,           -- errors found (cv) or questions asked (akinator)
+    time_left   INTEGER,           -- seconds left on timer (cv game)
+    reward_ksh  INTEGER,           -- 50 or 100
+    reward_code TEXT UNIQUE,       -- e.g. USIU-50K-AX7Q2R
+    claimed     BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE winners ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_insert_winners" ON winners FOR INSERT WITH CHECK (true);
+CREATE POLICY "allow_read_winners"   ON winners FOR SELECT USING (true);
+CREATE POLICY "allow_update_winners" ON winners FOR UPDATE USING (true);
+
+-- Atomic increment still needed for learning_data (already defined above)
+-- No extra RPC needed for winners — direct INSERT is fine.
+
+-- Verify:
+-- SELECT * FROM winners ORDER BY created_at DESC LIMIT 10;
+
+
+-- ════════════════════════════════════════════════════════════
+-- winners table  — career fair reward audit log
+-- Run this in the Supabase SQL Editor (Dashboard → SQL Editor)
+-- ════════════════════════════════════════════════════════════
+
+CREATE TABLE IF NOT EXISTS winners (
+    id           BIGSERIAL PRIMARY KEY,
+    name         TEXT        NOT NULL,
+    student_id   TEXT,
+    game         TEXT        NOT NULL DEFAULT 'cv_errors',
+    score        INTEGER,          -- errors found (CV game) or n_questions (Akinator)
+    time_left    INTEGER,          -- seconds left when game ended (CV game only)
+    reward_ksh   INTEGER,          -- 50 or 100
+    reward_code  TEXT        UNIQUE,
+    claimed      BOOLEAN     NOT NULL DEFAULT FALSE,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Allow the anon key (used by the JS in the iframe) to insert rows
+ALTER TABLE winners ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "anon insert winners"
+    ON winners FOR INSERT
+    TO anon
+    WITH CHECK (true);
+
+-- Staff can read the full table via the dashboard or a service-role query
+CREATE POLICY "service read winners"
+    ON winners FOR SELECT
+    TO service_role
+    USING (true);
+
+-- Index for fast code lookups when staff verify rewards
+CREATE INDEX IF NOT EXISTS winners_code_idx ON winners (reward_code);
+CREATE INDEX IF NOT EXISTS winners_game_idx ON winners (game, created_at DESC);
