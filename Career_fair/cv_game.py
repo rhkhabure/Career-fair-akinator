@@ -437,8 +437,6 @@ function show(id){
   document.getElementById(id).classList.add('on');
 }
 
-function kofiSVG(slot){return document.getElementById(slot).innerHTML;}
-
 function startGame(){
   found.clear();timeLeft=30;active=true;finalN=0;
   document.getElementById('tnum').textContent='0:30';
