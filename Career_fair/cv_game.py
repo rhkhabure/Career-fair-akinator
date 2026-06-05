@@ -59,8 +59,15 @@ def _extract(state: str) -> tuple[str, str]:
 
 
 def _rename_kg(svg: str, suffix: str) -> str:
-    """Rename the .kg class in a Kofi SVG so multiple instances don't conflict."""
-    return svg.replace('class="kg"', f'class="kg-{suffix}"')
+    """Rename the .kg class AND all defs IDs in a Kofi SVG to avoid
+    ID collisions when multiple instances share the same HTML document."""
+    return (svg
+        .replace('class="kg"',       f'class="kg-{suffix}"')
+        .replace('id="kpkm"',        f'id="kpkm-{suffix}"')
+        .replace('url(#kpkm)',       f'url(#kpkm-{suffix})')
+        .replace('id="krcm"',        f'id="krcm-{suffix}"')
+        .replace('clip-path="url(#krcm)"', f'clip-path="url(#krcm-{suffix})"')
+    )
 
 
 # ── public API ────────────────────────────────────────────────────────────────
@@ -68,19 +75,27 @@ def _rename_kg(svg: str, suffix: str) -> str:
 def cv_game_html(supabase_url: str = "", supabase_key: str = "") -> str:
     """Return a self-contained HTML string for the CV game."""
 
+    import json
+
     svg_think,  kf_css = _extract("thinking")
     svg_right,  _      = _extract("correct")
     svg_wrong,  _      = _extract("wrong")
 
-    # Rename .kg on correct/wrong so each state animates independently
-    svg_right = _rename_kg(svg_right, "correct")
-    svg_wrong = _rename_kg(svg_wrong, "wrong")
+    # Give every instance unique defs IDs so url(#...) references never collide
+    svg_think = _rename_kg(svg_think, "t")     # thinking — .kg-t, #kpkm-t, #krcm-t
+    svg_right = _rename_kg(svg_right, "c")     # correct  — .kg-c, #kpkm-c, #krcm-c
+    svg_wrong = _rename_kg(svg_wrong, "w")     # wrong    — .kg-w, #kpkm-w, #krcm-w
+
+    # Encode as JS string literals — avoids display:none killing <defs> registration
+    js_think = json.dumps(svg_think)
+    js_right = json.dumps(svg_right)
+    js_wrong = json.dumps(svg_wrong)
 
     # Build combined Kofi animation CSS for all three states
     kofi_anim_css = kf_css + """
-.kg        { animation: kft  3.8s  ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
-.kg-correct{ animation: kfb  0.55s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
-.kg-wrong  { animation: kfs  3s    ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+.kg-t{ animation: kft  3.8s  ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+.kg-c{ animation: kfb  0.55s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+.kg-w{ animation: kfs  3s    ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
 """
 
     html = (
@@ -211,12 +226,20 @@ def cv_game_html(supabase_url: str = "", supabase_key: str = "") -> str:
 
         "</style></head><body>"
 
-        # ══════════════════════════════ KOFI STORE (hidden) ═══════════════
-        "<div id='ks' style='display:none;'>"
-        f"<div id='k-think'>{svg_think}</div>"
-        f"<div id='k-right'>{svg_right}</div>"
-        f"<div id='k-wrong'>{svg_wrong}</div>"
-        "</div>"
+        # ══════════════════════════════ SVG STRINGS AS JS CONSTS ══════════════
+        # Injected as JSON-encoded JS constants — never inside display:none.
+        # url(#...) refs inside SVG need their <defs> to be in a rendered context;
+        # hidden divs can suppress this, causing pattern/clipPath to render blank.
+        "<script>"
+        f"const _SVG_T={js_think};"
+        f"const _SVG_C={js_right};"
+        f"const _SVG_W={js_wrong};"
+        "function kofiSVG(slot){"
+        "  if(slot==='k-think')return _SVG_T;"
+        "  if(slot==='k-right')return _SVG_C;"
+        "  if(slot==='k-wrong')return _SVG_W;"
+        "  return '';}"
+        "</script>"
 
         # ══════════════════════════════ PHASE 1 — READY ═══════════════════
         "<div id='s-ready' class='scr on'>"
