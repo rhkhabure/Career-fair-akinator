@@ -19,6 +19,7 @@ from db import (
     fetch_game_stats, fetch_confusion_pairs, is_supabase_configured,
 )
 from kofi import kofi_html
+from cv_game import cv_game_html
 
 # ─────────────────────────────────────────────────────────────
 # Config
@@ -335,31 +336,55 @@ def _reset_game():
 
 
 # ═════════════════════════════════════════════════════════════
-# LANDING PAGE
+# LANDING PAGE — game selector
 # ═════════════════════════════════════════════════════════════
 if st.session_state.page == "landing":
-    # Constrain Kofi in a centred column — without this he fills the full
-    # page width (~900px), renders ~1000px tall, and gets cropped by the iframe.
     _, k_col, _ = st.columns([1, 2, 1])
     with k_col:
         st.components.v1.html(kofi_html("idle"), height=430, scrolling=False)
 
     st.markdown("""
-    <div style="text-align:center; padding:.5rem 1rem 1.5rem;">
-        <h1 style="font-size:2.3rem; margin-bottom:.4rem;">USIU Career Fair Akinator</h1>
-        <p style="font-size:1.05rem; color:#a0b4c8; max-width:460px; margin:0 auto 1.8rem;">
-            Think of your <strong style="color:#F5A623;">degree programme</strong> at USIU-Africa.<br>
-            Kofi will try to guess it in
-            <strong style="color:#F5A623;">10 questions or fewer!</strong>
+    <div style="text-align:center; padding:.3rem 1rem 1.2rem;">
+        <h1 style="font-size:2rem; margin-bottom:.3rem;">USIU Career Fair</h1>
+        <p style="font-size:1rem; color:#a0b4c8; margin:0;">
+            Choose a game and hand the screen to a student
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    col_l, col_m, col_r = st.columns([2, 1, 2])
-    with col_m:
-        if st.button("▶ Play", type="primary", use_container_width=True):
+    g_left, g_right = st.columns(2, gap="medium")
+
+    with g_left:
+        st.markdown("""
+        <div style="background:#152333;border:2px solid #B31B1B55;border-radius:16px;
+                    padding:1.4rem;text-align:center;min-height:150px;">
+            <div style="font-size:2.2rem;margin-bottom:8px;">🎯</div>
+            <div style="font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:6px;">
+                Guess My Degree
+            </div>
+            <div style="font-size:0.82rem;color:#a0b4c8;line-height:1.45;">
+                Think of your programme at USIU-Africa. Kofi will guess it in 10 questions or fewer!
+            </div>
+        </div>""", unsafe_allow_html=True)
+        if st.button("▶ Play Akinator", type="primary", use_container_width=True, key="btn_ak"):
             _reset_game()
             st.session_state.page = "questions"
+            st.rerun()
+
+    with g_right:
+        st.markdown("""
+        <div style="background:#152333;border:2px solid #F5A62355;border-radius:16px;
+                    padding:1.4rem;text-align:center;min-height:150px;">
+            <div style="font-size:2.2rem;margin-bottom:8px;">📄</div>
+            <div style="font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:6px;">
+                Spot CV Mistakes
+            </div>
+            <div style="font-size:0.82rem;color:#a0b4c8;line-height:1.45;">
+                Find 5 errors in a CV before 30 seconds run out. Find 4+ and win Ksh 50–100!
+            </div>
+        </div>""", unsafe_allow_html=True)
+        if st.button("▶ Play CV Game", use_container_width=True, key="btn_cv"):
+            st.session_state.page = "cv_game"
             st.rerun()
 
 
@@ -625,6 +650,31 @@ if st.session_state.page == "guess":
             _reset_game()
             st.session_state.page = "landing"
             st.rerun()
+
+
+# ═════════════════════════════════════════════════════════════
+# CV GAME PAGE
+# ═════════════════════════════════════════════════════════════
+if st.session_state.page == "cv_game":
+    # Pull Supabase credentials for the JS client in the iframe
+    sb_url = sb_key = ""
+    if is_supabase_configured():
+        try:
+            sb_url = st.secrets["supabase"]["url"]
+            sb_key = st.secrets["supabase"]["key"]
+        except Exception:
+            pass
+
+    st.components.v1.html(
+        cv_game_html(sb_url, sb_key),
+        height=860,
+        scrolling=True,
+    )
+
+    st.markdown("<div style='margin-top:8px;'></div>", unsafe_allow_html=True)
+    if st.button("← Back to menu", key="cv_back"):
+        st.session_state.page = "landing"
+        st.rerun()
 
 
 # ═════════════════════════════════════════════════════════════
