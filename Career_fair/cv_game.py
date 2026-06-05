@@ -69,6 +69,14 @@ def _rename_kg(svg: str, suffix: str) -> str:
         .replace('clip-path="url(#krcm)"', f'clip-path="url(#krcm-{suffix})"')
     )
 
+def _split_defs(svg: str) -> tuple[str, str]:
+    """Separate <defs>…</defs> from the visual body of an SVG string."""
+    ds = svg.find("<defs>")
+    de = svg.find("</defs>") + 7
+    if ds == -1:
+        return "", svg
+    return svg[ds:de], svg[:ds] + svg[de:]
+
 
 # ── public API ────────────────────────────────────────────────────────────────
 
@@ -82,14 +90,25 @@ def cv_game_html(supabase_url: str = "", supabase_key: str = "") -> str:
     svg_wrong,  _      = _extract("wrong")
 
     # Give every instance unique defs IDs so url(#...) references never collide
-    svg_think = _rename_kg(svg_think, "t")     # thinking — .kg-t, #kpkm-t, #krcm-t
-    svg_right = _rename_kg(svg_right, "c")     # correct  — .kg-c, #kpkm-c, #krcm-c
-    svg_wrong = _rename_kg(svg_wrong, "w")     # wrong    — .kg-w, #kpkm-w, #krcm-w
+    svg_think = _rename_kg(svg_think, "t")
+    svg_right = _rename_kg(svg_right, "c")
+    svg_wrong = _rename_kg(svg_wrong, "w")
 
-    # Encode as JS string literals — avoids display:none killing <defs> registration
-    js_think = json.dumps(svg_think)
-    js_right = json.dumps(svg_right)
-    js_wrong = json.dumps(svg_wrong)
+    # Sprite SVG: permanent home for all <defs> — always in DOM, never display:none
+    # so url(#...) refs resolve correctly even after multiple innerHTML re-insertions.
+    defs_t, body_t = _split_defs(svg_think)
+    defs_c, body_c = _split_defs(svg_right)
+    defs_w, body_w = _split_defs(svg_wrong)
+    sprite = (
+        "<svg style='position:absolute;width:0;height:0;overflow:hidden;' aria-hidden='true'>"
+        f"{defs_t}{defs_c}{defs_w}"
+        "</svg>"
+    )
+
+    # Encode body-only SVGs (no defs) as JS string literals
+    js_think = json.dumps(body_t)
+    js_right = json.dumps(body_c)
+    js_wrong = json.dumps(body_w)
 
     # Build combined Kofi animation CSS for all three states
     kofi_anim_css = kf_css + """
@@ -225,6 +244,7 @@ def cv_game_html(supabase_url: str = "", supabase_key: str = "") -> str:
         + kofi_anim_css +
 
         "</style></head><body>"
+        f"{sprite}"   # permanent defs sprite — always resolvable
 
         # ══════════════════════════════ SVG STRINGS AS JS CONSTS ══════════════
         # Injected as JSON-encoded JS constants — never inside display:none.
