@@ -124,6 +124,14 @@ def _extract(state):
     svg = h[s:e]
     return svg
 
+def _split_defs(svg):
+    """Separate <defs>…</defs> from the rest of the SVG string."""
+    ds = svg.find("<defs>")
+    de = svg.find("</defs>") + 7
+    if ds == -1:
+        return "", svg
+    return svg[ds:de], svg[:ds] + svg[de:]
+
 def _rename(svg, suffix):
     return (svg
         .replace('class="kg"',   f'class="kg-{suffix}"')
@@ -156,10 +164,23 @@ def trivia_game_html(supabase_url="", supabase_key=""):
     svg_right = _rename(_extract("correct"),  "tc")
     svg_wrong = _rename(_extract("wrong"),    "tw")
 
+    # Split each SVG into <defs> and body; pool all defs in one always-visible
+    # sprite SVG so url(#…) references are always resolvable regardless of which
+    # Kofi state was last inserted via innerHTML.
+    defs_t, body_t = _split_defs(svg_think)
+    defs_c, body_c = _split_defs(svg_right)
+    defs_w, body_w = _split_defs(svg_wrong)
+
+    sprite = (
+        "<svg style='position:absolute;width:0;height:0;overflow:hidden;' aria-hidden='true'>"
+        f"{defs_t}{defs_c}{defs_w}"
+        "</svg>"
+    )
+
     kf_css   = _kf()
-    js_think = json.dumps(svg_think)
-    js_right = json.dumps(svg_right)
-    js_wrong = json.dumps(svg_wrong)
+    js_think = json.dumps(body_t)   # body-only (no defs) — refs sprite IDs
+    js_right = json.dumps(body_c)
+    js_wrong = json.dumps(body_w)
     q_json   = json.dumps(QUESTIONS)
     seg_json = json.dumps(SEGMENTS)
 
@@ -254,6 +275,7 @@ html,body{margin:0;padding:0;background:#0D1B2A;color:#d0dde8;
         "<meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width,initial-scale=1'>"
         f"<style>{css}</style></head><body>"
+        f"{sprite}"   # permanent defs — always in DOM, always resolvable
 
         # ── Kofi SVG JS constants ──────────────────────────────────────
         "<script>"
@@ -346,14 +368,14 @@ html,body{margin:0;padding:0;background:#0D1B2A;color:#d0dde8;
         "<line x1='0' y1='0' x2='-99' y2='-99' stroke='#0a1520' stroke-width='1.5'/>"
         "<circle r='22' fill='#0a1520'/><circle r='18' fill='#1a2e3a'/>"
         "<text y='6' text-anchor='middle' fill='#F5A623' font-size='9' font-weight='600'>SPIN</text>"
-        "<g transform='rotate(-67.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 100</text></g>"
-        "<g transform='rotate(-22.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 50</text></g>"
-        "<g transform='rotate(22.5) translate(0,-86)' fill='white' font-size='8.5' font-weight='600' text-anchor='middle'><text>Wristband</text></g>"
-        "<g transform='rotate(67.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 20</text></g>"
-        "<g transform='rotate(112.5) translate(0,-82)' fill='white' font-size='8' font-weight='600' text-anchor='middle'><text>2nd Chance</text></g>"
+        "<g transform='rotate(22.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 100</text></g>"
+        "<g transform='rotate(67.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 50</text></g>"
+        "<g transform='rotate(112.5) translate(0,-86)' fill='white' font-size='8.5' font-weight='600' text-anchor='middle'><text>Wristband</text></g>"
         "<g transform='rotate(157.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 20</text></g>"
-        "<g transform='rotate(202.5) translate(0,-86)' fill='white' font-size='9' font-weight='600' text-anchor='middle'><text>Nothing</text></g>"
-        "<g transform='rotate(247.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 50</text></g>"
+        "<g transform='rotate(202.5) translate(0,-82)' fill='white' font-size='8' font-weight='600' text-anchor='middle'><text>2nd Chance</text></g>"
+        "<g transform='rotate(247.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 20</text></g>"
+        "<g transform='rotate(292.5) translate(0,-86)' fill='white' font-size='9' font-weight='600' text-anchor='middle'><text>Nothing</text></g>"
+        "<g transform='rotate(337.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 50</text></g>"
         "</g>"
         "<circle r='142' fill='none' stroke='#2a3a4a' stroke-width='3'/>"
         "</svg>"
