@@ -1,10 +1,9 @@
 """
-trivia_game.py — USIU Trivia + Spin to Win  (Career Fair game 3)
+trivia_game.py — USIU Trivia + Wristband reward  (Career Fair game 3)
 
 Pool of 17 questions; 8 randomly selected and option-shuffled per game.
-Scoring: 7/8 or 8/8 unlocks the Spin to Win wheel.
-Wheel prizes (8 segments): Ksh 100, Ksh 50 ×2, Ksh 20 ×2, Wristband,
-                            Second Chance, Nothing
+Scoring: 7/8 or 8/8 unlocks a wristband claim form.
+Reward: USIU wristband (no cash prizes).
 Supabase: writes to the shared `winners` table (game='trivia').
 """
 
@@ -83,36 +82,6 @@ QUESTIONS = [
      "correct": "25,000+"},
 ]
 
-# ─────────────────────────────────────────────────────────────
-# Spin wheel  (8 equal segments, 45° each, starting top = -90°)
-# ─────────────────────────────────────────────────────────────
-SEGMENTS = [
-    {"label": "Ksh 100",      "color": "#F5A623",
-     "speech": "THE DRUM BOOMS! Ksh 100 — the griot has spoken! 🎵🎵",
-     "ksh": 100, "type": "cash"},
-    {"label": "Ksh 50",       "color": "#B31B1B",
-     "speech": "Ayeee! 50 shillings! The drum never lies! 🥁",
-     "ksh": 50,  "type": "cash"},
-    {"label": "Wristband",    "color": "#1a4a8a",
-     "speech": "Rock the USIU colours! A wristband for a true scholar! 🎓",
-     "ksh": 0,   "type": "wristband"},
-    {"label": "Ksh 20",       "color": "#D85030",
-     "speech": "The drum spoke — Ksh 20 is yours! Every shilling counts! 🥁",
-     "ksh": 20,  "type": "cash"},
-    {"label": "2nd Chance",   "color": "#2D6A4F",
-     "speech": "The drum gives you ANOTHER spin! The griot demands it! 🔄",
-     "ksh": 0,   "type": "retry"},
-    {"label": "Ksh 20",       "color": "#C04020",
-     "speech": "The drum spoke — Ksh 20 coming your way! 🥁",
-     "ksh": 20,  "type": "cash"},
-    {"label": "Nothing",      "color": "#445566",
-     "speech": "The drum is quiet this time… but 7/8 on USIU trivia? That IS the prize. 🎓",
-     "ksh": 0,   "type": "nothing"},
-    {"label": "Ksh 50",       "color": "#9a1515",
-     "speech": "Ayeee! Another 50 bob! The griot is generous today! 🥁",
-     "ksh": 50,  "type": "cash"},
-]
-
 
 # ─────────────────────────────────────────────────────────────
 # Helpers
@@ -178,11 +147,10 @@ def trivia_game_html(supabase_url="", supabase_key=""):
     )
 
     kf_css   = _kf()
-    js_think = json.dumps(body_t)   # body-only (no defs) — refs sprite IDs
+    js_think = json.dumps(body_t)
     js_right = json.dumps(body_c)
     js_wrong = json.dumps(body_w)
     q_json   = json.dumps(QUESTIONS)
-    seg_json = json.dumps(SEGMENTS)
 
     kofi_css = kf_css + """
 .kg-tt{animation:kft  3.8s  ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
@@ -282,7 +250,6 @@ html,body{margin:0;padding:0;background:#0D1B2A;color:#d0dde8;
         f"const _ST={js_think},_SC={js_right},_SW={js_wrong};"
         "function kofiSVG(k){{return k==='t'?_ST:k==='c'?_SC:_SW;}}"
         f"const QPOOL={q_json};"
-        f"const SEGS={seg_json};"
         f"const SB_URL='{supabase_url}',SB_KEY='{supabase_key}';"
         "</script>"
 
@@ -293,12 +260,11 @@ html,body{margin:0;padding:0;background:#0D1B2A;color:#d0dde8;
         "<div class='sp' id='rk-sp'>Think you know USIU-Africa? Let's find out&#8230;</div>"
         "<h1 class='r-title'>USIU Trivia</h1>"
         "<p class='r-sub'>8 questions about your university.<br>"
-        "Score 7 or 8 out of 8 and spin to win!</p>"
+        "Score 7 or 8 out of 8 and win a wristband!</p>"
         "<div class='rules'>"
         "<div class='rule'><span class='ri'>❓</span><span><strong>8 questions</strong>, multiple choice</span></div>"
-        "<div class='rule'><span class='ri'>✅</span><span>Get <strong>7/8 or 8/8</strong> to unlock the spin wheel</span></div>"
-        "<div class='rule'><span class='ri'>🎰</span><span>Spin to win <strong>Ksh 20, 50, 100</strong> or a <strong>wristband</strong></span></div>"
-        "<div class='rule'><span class='ri'>🔄</span><span>Land on <em>Second Chance</em> and spin again!</span></div>"
+        "<div class='rule'><span class='ri'>✅</span><span>Get <strong>7/8 or 8/8</strong> to claim a reward</span></div>"
+        "<div class='rule'><span class='ri'>🎓</span><span>Win a <strong>USIU wristband</strong> for your score!</span></div>"
         "</div>"
         "<button class='start-btn' onclick='startGame()'>🥁 Start Trivia!</button>"
         "</div></div>"
@@ -341,76 +307,38 @@ html,body{margin:0;padding:0;background:#0D1B2A;color:#d0dde8;
         "<div id='sc-btns' style='margin-top:14px;'></div>"
         "</div></div>"
 
-        # ══════════════════════════════ PHASE 4 — SPIN ════════════════
-        "<div id='s-spin' class='scr'>"
+        # ══════════════════════════════ PHASE 4 — WRISTBAND CLAIM ═══════
+        "<div id='s-claim' class='scr'>"
         "<div class='wrap'>"
         "<div class='kofi-md' id='spk'></div>"
-        "<div class='sp' id='spk-sp'>The drum decides your fate&#8230;</div>"
-        "<div class='wheel-wrap'>"
-        "<div class='ptr'>&#9660;</div>"
-        "<svg id='tw' width='300' height='300' viewBox='-150 -150 300 300' style='overflow:visible;'>"
-        "<g id='twheel'>"
-        "<path d='M0,0 L0,-140 A140,140,0,0,1,99,-99 Z' fill='#F5A623'/>"
-        "<path d='M0,0 L99,-99 A140,140,0,0,1,140,0 Z' fill='#B31B1B'/>"
-        "<path d='M0,0 L140,0 A140,140,0,0,1,99,99 Z' fill='#1a4a8a'/>"
-        "<path d='M0,0 L99,99 A140,140,0,0,1,0,140 Z' fill='#D85030'/>"
-        "<path d='M0,0 L0,140 A140,140,0,0,1,-99,99 Z' fill='#2D6A4F'/>"
-        "<path d='M0,0 L-99,99 A140,140,0,0,1,-140,0 Z' fill='#C04020'/>"
-        "<path d='M0,0 L-140,0 A140,140,0,0,1,-99,-99 Z' fill='#445566'/>"
-        "<path d='M0,0 L-99,-99 A140,140,0,0,1,0,-140 Z' fill='#9a1515'/>"
-        "<line x1='0' y1='0' x2='0' y2='-140' stroke='#0a1520' stroke-width='1.5'/>"
-        "<line x1='0' y1='0' x2='99' y2='-99' stroke='#0a1520' stroke-width='1.5'/>"
-        "<line x1='0' y1='0' x2='140' y2='0' stroke='#0a1520' stroke-width='1.5'/>"
-        "<line x1='0' y1='0' x2='99' y2='99' stroke='#0a1520' stroke-width='1.5'/>"
-        "<line x1='0' y1='0' x2='0' y2='140' stroke='#0a1520' stroke-width='1.5'/>"
-        "<line x1='0' y1='0' x2='-99' y2='99' stroke='#0a1520' stroke-width='1.5'/>"
-        "<line x1='0' y1='0' x2='-140' y2='0' stroke='#0a1520' stroke-width='1.5'/>"
-        "<line x1='0' y1='0' x2='-99' y2='-99' stroke='#0a1520' stroke-width='1.5'/>"
-        "<circle r='22' fill='#0a1520'/><circle r='18' fill='#1a2e3a'/>"
-        "<text y='6' text-anchor='middle' fill='#F5A623' font-size='9' font-weight='600'>SPIN</text>"
-        "<g transform='rotate(22.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 100</text></g>"
-        "<g transform='rotate(67.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 50</text></g>"
-        "<g transform='rotate(112.5) translate(0,-86)' fill='white' font-size='8.5' font-weight='600' text-anchor='middle'><text>Wristband</text></g>"
-        "<g transform='rotate(157.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 20</text></g>"
-        "<g transform='rotate(202.5) translate(0,-82)' fill='white' font-size='8' font-weight='600' text-anchor='middle'><text>2nd Chance</text></g>"
-        "<g transform='rotate(247.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 20</text></g>"
-        "<g transform='rotate(292.5) translate(0,-86)' fill='white' font-size='9' font-weight='600' text-anchor='middle'><text>Nothing</text></g>"
-        "<g transform='rotate(337.5) translate(0,-88)' fill='white' font-size='9.5' font-weight='600' text-anchor='middle'><text>Ksh 50</text></g>"
-        "</g>"
-        "<circle r='142' fill='none' stroke='#2a3a4a' stroke-width='3'/>"
-        "</svg>"
+        "<div class='sp' id='spk-sp'>You&#8217;ve earned it! Claim your wristband. &#127891;</div>"
+        "<div class='prize-card'>"
+        "<div class='prize-name' style='color:#6ee7b7;'>&#127891; USIU Wristband</div>"
+        "<div class='sp'>Show this code to a booth staff member to collect your reward.</div>"
+        "<div class='rwd-banner'>"
+        "<div class='rwd-ksh'>USIU Wristband</div>"
+        "<div class='rwd-note'>Enter your details below to claim</div>"
         "</div>"
-        "<button class='spin-btn' id='sp-btn' onclick='doSpin()'>🥁 Spin the wheel!</button>"
-        "<div id='prize-card' class='prize-card' style='display:none;'>"
-        "<div class='prize-name' id='prize-name'></div>"
-        "<div class='sp' id='prize-sp'></div>"
-        "<div id='claim-section' style='display:none;'>"
-        "<div class='rwd-banner'><div class='rwd-ksh' id='rwd-ksh'></div>"
-        "<div class='rwd-note'>Enter your details below to claim</div></div>"
         "<div class='cf' id='cf-div'>"
         "<input type='text' id='pname' placeholder='Full name *' autocomplete='off'>"
         "<input type='text' id='pid' placeholder='Student / Staff ID (optional)' autocomplete='off'>"
-        "<button class='cl-btn' id='cl-btn' onclick='submitClaim()'>Claim Reward &#8594;</button>"
+        "<button class='cl-btn' id='cl-btn' onclick='submitClaim()'>Claim Wristband &#8594;</button>"
         "</div>"
         "<div id='cf-done' style='display:none;'>"
         "<div class='code-box'>"
-        "<div class='code-lbl'>Your reward code</div>"
+        "<div class='code-lbl'>Your wristband code</div>"
         "<div class='code-val' id='rcode'></div>"
-        "<div class='code-hint'>Show this to booth staff to receive your reward &#127881;</div>"
-        "</div></div></div>"
-        "<div id='nothing-sec' style='display:none;'>"
-        "<p style='font-size:12.5px;color:#a0b4c8;font-style:italic;margin:8px 0;'>"
-        "Your USIU knowledge is the real prize. Go study that extra chapter! &#127891;"
-        "</p></div>"
-        "<button class='again-btn' id='sp-again' style='display:none;' onclick='resetGame()'>&#128260; Play Again</button>"
+        "<div class='code-hint'>Show this to booth staff to receive your wristband &#127881;</div>"
+        "</div></div>"
         "</div>"
+        "<button class='again-btn' id='sp-again' style='display:none;margin-top:10px;' onclick='resetGame()'>&#128260; Play Again</button>"
         "</div></div>"
 
         # ══════════════════════════════ JAVASCRIPT ════════════════════
         "<script>"
         r"""
 let gQuestions=[], gIdx=0, gScore=0, gCorrectIdx=[], gMissed=[];
-let wheelRot=0, spinning=false, finalScore=0;
+let finalScore=0;
 
 function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
 
@@ -474,9 +402,9 @@ function showScore(){
   if(gScore>=7){
     sk.innerHTML=kofiSVG('c');
     sp.textContent=gScore===8?'PERFECT SCORE! The griot is amazed! 🎵':'7 out of 8 — outstanding! 🥁';
-    msg.textContent=gScore===8?'Flawless. You truly know your university!':'Excellent! You\'ve earned the spin!';
+    msg.textContent=gScore===8?'Flawless. You truly know your university!':'Excellent! You\'ve earned a wristband!';
     const btns=document.getElementById('sc-btns');
-    btns.innerHTML=`<button class="spin-btn" onclick="goSpin()">🎰 Spin the Wheel!</button>`;
+    btns.innerHTML=`<button class="spin-btn" onclick="goClaim()">🎓 Claim Your Wristband!</button>`;
   } else {
     sk.innerHTML=kofiSVG('w');
     sp.textContent='Good effort — check what you missed and try again! 📚';
@@ -495,82 +423,30 @@ function showScore(){
   show('s-score');
 }
 
-function goSpin(){
-  document.getElementById('spk').innerHTML=kofiSVG('t');
-  document.getElementById('spk-sp').textContent='The drum decides your fate…';
-  document.getElementById('prize-card').style.display='none';
-  document.getElementById('sp-btn').disabled=false;
-  document.getElementById('sp-btn').textContent='🥁 Spin the wheel!';
-  document.getElementById('sp-again').style.display='none';
-  show('s-spin');
-}
-
-function doSpin(){
-  if(spinning)return;
-  spinning=true;
-  document.getElementById('sp-btn').disabled=true;
-  const seg=Math.floor(Math.random()*8);
-  const base=337.5-seg*45;
-  const spins=5+Math.floor(Math.random()*4);
-  const delta=((base-(wheelRot%360))+360)%360;
-  wheelRot+=spins*360+delta;
-  const el=document.getElementById('twheel');
-  el.style.transition='transform 4.5s cubic-bezier(0.17,0.67,0.12,1)';
-  el.style.transform=`rotate(${wheelRot}deg)`;
-  setTimeout(()=>{spinning=false;handlePrize(SEGS[seg]);},4700);
-}
-
-function handlePrize(seg){
-  const card=document.getElementById('prize-card');
-  const pn=document.getElementById('prize-name');
-  const ps=document.getElementById('prize-sp');
-  pn.textContent=seg.label;
-  pn.style.color=seg.color;
-  ps.textContent='🥁 '+seg.speech;
-  card.style.display='block';
-  document.getElementById('claim-section').style.display='none';
-  document.getElementById('nothing-sec').style.display='none';
-  document.getElementById('sp-again').style.display='none';
-  document.getElementById('cf-done').style.display='none';
+function goClaim(){
+  document.getElementById('spk').innerHTML=kofiSVG('c');
+  document.getElementById('spk-sp').textContent='You\'ve earned it! Claim your wristband. 🎓';
   document.getElementById('cf-div').style.display='block';
-  if(seg.type==='retry'){
-    document.getElementById('spk').innerHTML=kofiSVG('t');
-    document.getElementById('spk-sp').textContent='Spin again — the griot demands it! 🔄';
-    document.getElementById('sp-btn').disabled=false;
-    document.getElementById('sp-btn').textContent='🔄 Spin again!';
-  } else if(seg.type==='nothing'){
-    document.getElementById('spk').innerHTML=kofiSVG('w');
-    document.getElementById('nothing-sec').style.display='block';
-    document.getElementById('sp-again').style.display='inline-block';
-  } else {
-    const ksh=seg.ksh;
-    document.getElementById('spk').innerHTML=kofiSVG('c');
-    document.getElementById('claim-section').style.display='block';
-    const rwd=ksh>0?`Ksh ${ksh} credit reward!`:`${seg.label} reward!`;
-    document.getElementById('rwd-ksh').textContent=rwd;
-    document.getElementById('cl-btn').textContent=
-      ksh>0?`Claim Ksh ${ksh} →`:'Claim Wristband →';
-    document.getElementById('cl-btn').dataset.ksh=ksh;
-    document.getElementById('cl-btn').dataset.type=seg.type;
-    document.getElementById('cl-btn').dataset.label=seg.label;
-  }
+  document.getElementById('cf-done').style.display='none';
+  document.getElementById('sp-again').style.display='none';
+  document.getElementById('pname').value='';
+  document.getElementById('pid').value='';
+  document.getElementById('pname').style.borderColor='';
+  show('s-claim');
 }
 
-function genCode(label){
+function genCode(){
   const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let s='';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];
-  const pfx=label.replace(/[^A-Z0-9]/gi,'').substring(0,4).toUpperCase();
-  return`USIU-${pfx}-${s}`;
+  return'USIU-WRIS-'+s;
 }
 
 async function submitClaim(){
   const name=document.getElementById('pname').value.trim();
   if(!name){document.getElementById('pname').style.borderColor='#f87171';return;}
   const sid=document.getElementById('pid').value.trim();
+  const code=genCode();
   const btn=document.getElementById('cl-btn');
-  const ksh=parseInt(btn.dataset.ksh||'0');
-  const label=btn.dataset.label||'prize';
-  const code=genCode(label);
   btn.textContent='Saving…';btn.disabled=true;
   if(SB_URL&&SB_KEY){
     try{
@@ -581,7 +457,7 @@ async function submitClaim(){
                  'Prefer':'return=minimal'},
         body:JSON.stringify({name,student_id:sid||null,game:'trivia',
                              score:finalScore,time_left:null,
-                             reward_ksh:ksh,reward_code:code,
+                             reward_ksh:0,reward_code:code,
                              claimed:false})
       });
     }catch(e){console.warn('Supabase save failed:',e);}
@@ -593,15 +469,106 @@ async function submitClaim(){
 }
 
 function resetGame(){
-  wheelRot=0;spinning=false;
-  const el=document.getElementById('twheel');
-  el.style.transition='none';
-  el.style.transform='rotate(0deg)';
   document.getElementById('miss-box').style.display='none';
   document.getElementById('miss-list').innerHTML='';
+  document.getElementById('rk').innerHTML=kofiSVG('t');
+  show('s-ready');
+}
+
+document.getElementById('rk').innerHTML=kofiSVG('t');
+    else if(idx===i&&!correct)el.classList.add('wrong-sel');
+  });
+  const fb=document.getElementById('q-fb');
+  fb.style.display='block';
+  fb.className='fb-bar '+(correct?'fb-ok':'fb-no');
+  fb.textContent=correct?'✓ Correct!':'✗ The correct answer was: '+q.correct;
+  document.getElementById('qk').innerHTML=kofiSVG(correct?'c':'w');
+  document.getElementById('qk-sp').textContent=correct?'Ayeee! 🥁':'Hmm… not quite.';
+  setTimeout(()=>{
+    gIdx++;
+    if(gIdx<8)showQ();
+    else showScore();
+  },1700);
+}
+
+function showScore(){
+  finalScore=gScore;
+  const sk=document.getElementById('sk');
+  const sp=document.getElementById('sk-sp');
+  const msg=document.getElementById('sc-msg');
+  document.getElementById('sc-n').textContent=gScore;
+  if(gScore>=7){
+    sk.innerHTML=kofiSVG('c');
+    sp.textContent=gScore===8?'PERFECT SCORE! The griot is amazed! 🎵':'7 out of 8 — outstanding! 🥁';
+    msg.textContent=gScore===8?'Flawless. You truly know your university!':'Excellent! You\'ve earned a wristband!';
+    const btns=document.getElementById('sc-btns');
+    btns.innerHTML=`<button class="spin-btn" onclick="goClaim()">🎓 Claim Your Wristband!</button>`;
+  } else {
+    sk.innerHTML=kofiSVG('w');
+    sp.textContent='Good effort — check what you missed and try again! 📚';
+    const msgs={6:'So close! 6/8.',5:'5/8 — study those facts!',4:'4/8 — keep learning!',0:'0/8 — that\'s a start!'};
+    msg.textContent=msgs[gScore]||`${gScore}/8 — keep studying!`;
+    if(gMissed.length){
+      const mb=document.getElementById('miss-box');
+      mb.style.display='block';
+      document.getElementById('miss-list').innerHTML=gMissed.map(m=>
+        `<div class="miss-item"><div class="miss-q">${m.q}</div><div class="miss-a">✓ ${m.ans}</div></div>`
+      ).join('');
+    }
+    document.getElementById('sc-btns').innerHTML=
+      `<button class="again-btn" onclick="resetGame()">🔄 Try Again</button>`;
+  }
+  show('s-score');
+}
+
+function goClaim(){
+  document.getElementById('spk').innerHTML=kofiSVG('c');
+  document.getElementById('spk-sp').textContent='You\'ve earned it! Claim your wristband. 🎓';
+  document.getElementById('cf-div').style.display='block';
+  document.getElementById('cf-done').style.display='none';
+  document.getElementById('sp-again').style.display='none';
   document.getElementById('pname').value='';
   document.getElementById('pid').value='';
   document.getElementById('pname').style.borderColor='';
+  show('s-claim');
+}
+
+function genCode(){
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s='';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];
+  return'USIU-WRIS-'+s;
+}
+
+async function submitClaim(){
+  const name=document.getElementById('pname').value.trim();
+  if(!name){document.getElementById('pname').style.borderColor='#f87171';return;}
+  const sid=document.getElementById('pid').value.trim();
+  const code=genCode();
+  const btn=document.getElementById('cl-btn');
+  btn.textContent='Saving…';btn.disabled=true;
+  if(SB_URL&&SB_KEY){
+    try{
+      await fetch(SB_URL+'/rest/v1/winners',{
+        method:'POST',
+        headers:{'Content-Type':'application/json',
+                 'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,
+                 'Prefer':'return=minimal'},
+        body:JSON.stringify({name,student_id:sid||null,game:'trivia',
+                             score:finalScore,time_left:null,
+                             reward_ksh:0,reward_code:code,
+                             claimed:false})
+      });
+    }catch(e){console.warn('Supabase save failed:',e);}
+  }
+  document.getElementById('cf-div').style.display='none';
+  document.getElementById('rcode').textContent=code;
+  document.getElementById('cf-done').style.display='block';
+  document.getElementById('sp-again').style.display='inline-block';
+}
+
+function resetGame(){
+  document.getElementById('miss-box').style.display='none';
+  document.getElementById('miss-list').innerHTML='';
   document.getElementById('rk').innerHTML=kofiSVG('t');
   show('s-ready');
 }
