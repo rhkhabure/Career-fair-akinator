@@ -273,7 +273,7 @@ def cv_game_html(supabase_url: str = "", supabase_key: str = "") -> str:
         "<div class='rule'><span class='ri'>👆</span><span>Tap anything that looks wrong on the CV</span></div>"
         "<div class='rule'><span class='ri'>💡</span><span>ATS red flags and recruiter pet-peeves both count</span></div>"
         "<div class='rule'><span class='ri'>🏆</span>"
-        "<span>Find <strong>4 / 5</strong> → Ksh 50 &nbsp;·&nbsp; Find <strong>5 / 5</strong> → Ksh 100</span></div>"
+        "<span>Find <strong>4 / 5</strong> or <strong>5 / 5</strong> errors &rarr; win a <strong>USIU wristband!</strong></span></div>"
         "</div>"
         "<button class='start-btn' onclick='startGame()'>🥁 Start — Let&rsquo;s go!</button>"
         "</div></div>"
@@ -392,13 +392,13 @@ def cv_game_html(supabase_url: str = "", supabase_key: str = "") -> str:
         # Reward section (score ≥ 4)
         "<div id='rwd-sec' style='display:none;'>"
         "<div class='rwd-banner'>"
-        "<div class='rwd-ksh' id='rwd-ksh'></div>"
-        "<div class='rwd-note'>Enter your details below to claim your credit</div>"
+        "<div class='rwd-ksh' id='rwd-ksh'>🎓 USIU Wristband!</div>"
+        "<div class='rwd-note'>Enter your details below to claim your wristband</div>"
         "</div>"
         "<div class='cf' id='cf-div'>"
         "<input type='text' id='pname' placeholder='Full name *' autocomplete='off'>"
         "<input type='text' id='pid'   placeholder='Student / Staff ID (optional)' autocomplete='off'>"
-        "<button class='cl-btn' id='cl-btn' onclick='submitClaim()'>Claim Reward →</button>"
+        "<button class='cl-btn' id='cl-btn' onclick='submitClaim()'>Claim Wristband &rarr;</button>"
         "</div>"
         "<div id='cf-done' style='display:none;'>"
         "<div class='code-box'>"
@@ -511,11 +511,7 @@ function showResult(){
 
   // Reward
   if(n>=4){
-    const ksh=n>=5?100:50;
     document.getElementById('rwd-sec').style.display='block';
-    document.getElementById('rwd-ksh').textContent='Ksh '+ksh+' credit reward!';
-    document.getElementById('cl-btn').textContent='Claim Ksh '+ksh+' →';
-    document.getElementById('cl-btn').dataset.ksh=ksh;
   }
 
   // Parting remark
@@ -529,10 +525,10 @@ function showResult(){
   show('s-result');
 }
 
-function genCode(ksh){
+function genCode(){
   const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let s='';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];
-  return'USIU-'+(ksh>=100?'100K':'50K')+'-'+s;
+  return'USIU-WRIS-'+s;
 }
 
 async function submitClaim(){
@@ -543,8 +539,7 @@ async function submitClaim(){
     return;
   }
   const sid=document.getElementById('pid').value.trim();
-  const ksh=parseInt(document.getElementById('cl-btn').dataset.ksh||'50');
-  const code=genCode(ksh);
+  const code=genCode();
   const btn=document.getElementById('cl-btn');
   btn.textContent='Saving…';btn.disabled=true;
   if(SB_URL&&SB_KEY){
@@ -556,7 +551,7 @@ async function submitClaim(){
                  'Prefer':'return=minimal'},
         body:JSON.stringify({name,student_id:sid||null,game:'cv_errors',
                              score:finalN,time_left:timeLeft,
-                             reward_ksh:ksh,reward_code:code,claimed:false})
+                             reward_ksh:0,reward_code:code,claimed:false})
       });
     }catch(e){console.warn('Supabase save failed:',e);}
   }
