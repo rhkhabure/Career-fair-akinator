@@ -56,17 +56,7 @@ QUESTIONS = [
          "A logistics company handling East African shipping"],
      "correct": "A BPO company providing data annotation, customer support, and outsourced HR services"},
 
-    {"q": "Where is Oasis Outsourcing based?",
-     "options": ["Nairobi, Kenya", "Mombasa, Kenya",
-                 "Kampala, Uganda", "Dar es Salaam, Tanzania"],
-     "correct": "Nairobi, Kenya"},
 
-    {"q": "Which of these is a service offered by Oasis Outsourcing?",
-     "options": ["Data annotation and customer support",
-                 "Manufacturing and factory operations",
-                 "Agricultural export and distribution",
-                 "Building and construction services"],
-     "correct": "Data annotation and customer support"},
     {"q": "When did the USIU-Africa Career Fair 2026 officially start?",
      "options": ["June 9th", "June 15th", "June 3rd", "June 20th"],
      "correct": "June 9th"},
