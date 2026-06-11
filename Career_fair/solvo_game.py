@@ -15,65 +15,110 @@ from kofi import kofi_html as _kh
 # correct is always the first option; JS shuffles all four.
 # ─────────────────────────────────────────────────────────────
 QUESTIONS = [
-    {"q": "What year was Solvo founded?",
-     "options": ["2018", "2015", "2020", "2016"],
-     "correct": "2018"},
-
-    {"q": "Where is Solvo's main talent hub headquartered?",
-     "options": ["Medellín, Colombia", "Mexico City, Mexico",
-                 "São Paulo, Brazil", "Buenos Aires, Argentina"],
-     "correct": "Medellín, Colombia"},
-
-    {"q": "What is Solvo's official tagline?",
-     "options": ["Your Remote Workforce and Global Talent Solution",
-                 "Connecting Talent Globally",
-                 "The Future of Remote Work",
-                 "Work Without Borders"],
-     "correct": "Your Remote Workforce and Global Talent Solution"},
-
-    {"q": "How much can companies typically save on hiring costs by working with Solvo?",
-     "options": ["Up to 60%", "Up to 30%", "Up to 80%", "Up to 45%"],
-     "correct": "Up to 60%"},
+    # ── About Solvo ───────────────────────────────────────────────────────────
+    {"q": "What does Solvo do?",
+     "options": [
+         "Connects US companies with skilled remote professionals in Latin America",
+         "Provides office furniture and equipment to businesses",
+         "Designs websites and mobile apps for startups",
+         "Offers financial loans to small businesses"],
+     "correct": "Connects US companies with skilled remote professionals in Latin America"},
 
     {"q": "Who is the Founder and CEO of Solvo?",
-     "options": ["George Newberry", "Michael Torres",
-                 "Carlos Mendez", "David Rodriguez"],
+     "options": ["George Newberry", "Michael Torres", "Carlos Mendez", "David Rodriguez"],
      "correct": "George Newberry"},
 
-    {"q": "Which of these sectors does Solvo NOT primarily serve?",
-     "options": ["Mining & Extraction", "Healthcare",
-                 "Legal", "Accounting & Finance"],
-     "correct": "Mining & Extraction"},
+    # ── Staff recognition ─────────────────────────────────────────────────────
+    # Correct answer is one of the real staff (Lilian / Purity / Nalliah / Munyuu).
+    # Wrong options are phonetically similar but not real names.
+    {"q": "Which of these is the name of one of the Solvo booth staff members?",
+     "options": ["Purity", "Clarity", "Charity", "Sincerity"],
+     "correct": "Purity"},
 
-    {"q": "What staffing model does Solvo use to connect US companies with talent?",
-     "options": ["Nearshore", "Offshore", "Onshore only", "Hybrid local"],
-     "correct": "Nearshore"},
+    {"q": "Which of these is the name of one of the Solvo booth staff members?",
+     "options": ["Nalliah", "Naliah", "Nalika", "Naliwa"],
+     "correct": "Nalliah"},
 
-    {"q": "What is Solvo's customer satisfaction rate?",
-     "options": ["96%", "75%", "88%", "92%"],
-     "correct": "96%"},
+    {"q": "Which of these is the name of one of the Solvo booth staff members?",
+     "options": ["Lilian", "Liliana", "Livia", "Linnea"],
+     "correct": "Lilian"},
 
-    {"q": "What three things does Solvo handle for clients when sourcing talent?",
-     "options": ["Recruiting, hiring, and training",
-                 "Only recruiting",
-                 "Only training and onboarding",
-                 "Only hiring and payroll"],
-     "correct": "Recruiting, hiring, and training"},
+    {"q": "Which of these is the name of one of the Solvo booth staff members?",
+     "options": ["Munyuu", "Munyua", "Munyuki", "Munyore"],
+     "correct": "Munyuu"},
 
-    {"q": "In which US state is Solvo's US headquarters located?",
-     "options": ["Arizona", "Texas", "California", "Florida"],
-     "correct": "Arizona"},
+    # ── About Oasis Outsourcing (Solvo's Kenya partner) ───────────────────────
+    {"q": "What does Oasis Outsourcing do?",
+     "options": [
+         "A BPO company providing data annotation, customer support, and outsourced HR services",
+         "A Kenyan bank offering loans to small businesses",
+         "A software company that builds mobile apps for startups",
+         "A logistics company handling East African shipping"],
+     "correct": "A BPO company providing data annotation, customer support, and outsourced HR services"},
 
-    {"q": "What does Solvo's nearshore model give US companies access to?",
-     "options": ["Experienced professionals in Latin America",
-                 "Workers only in the same US state",
-                 "Talent exclusively from Asia",
-                 "Only part-time workers"],
-     "correct": "Experienced professionals in Latin America"},
+    {"q": "Where is Oasis Outsourcing based?",
+     "options": ["Nairobi, Kenya", "Mombasa, Kenya",
+                 "Kampala, Uganda", "Dar es Salaam, Tanzania"],
+     "correct": "Nairobi, Kenya"},
 
-    {"q": "Approximately how many professionals are in the Solvo network?",
-     "options": ["Over 3,000", "About 200", "About 800", "About 50"],
-     "correct": "Over 3,000"},
+    {"q": "Which of these is a service offered by Oasis Outsourcing?",
+     "options": ["Data annotation and customer support",
+                 "Manufacturing and factory operations",
+                 "Agricultural export and distribution",
+                 "Building and construction services"],
+     "correct": "Data annotation and customer support"},
+    {"q": "When did the USIU-Africa Career Fair 2026 officially start?",
+     "options": ["June 9th", "June 15th", "June 3rd", "June 20th"],
+     "correct": "June 9th"},
+
+    # ── Definition questions (Solvo's core work) ──────────────────────────────
+    {"q": "What is recruitment?",
+     "options": [
+         "The process of finding, attracting, and hiring qualified candidates for job openings",
+         "The process of training and upskilling existing employees",
+         "The process of managing employee salaries and benefits",
+         "The process of creating company HR policies"],
+     "correct": "The process of finding, attracting, and hiring qualified candidates for job openings"},
+
+    {"q": "What is outsourcing?",
+     "options": [
+         "Hiring external professionals or companies to handle specific business functions",
+         "Moving an entire company's offices to another country",
+         "Replacing all employees with automated systems",
+         "Selling a division of your business to a competitor"],
+     "correct": "Hiring external professionals or companies to handle specific business functions"},
+
+    {"q": "What does a remote worker do?",
+     "options": [
+         "Works outside a traditional office, typically from home or another location",
+         "Only works on weekends and public holidays",
+         "Travels internationally for every project",
+         "Works exclusively on a factory floor"],
+     "correct": "Works outside a traditional office, typically from home or another location"},
+
+    {"q": "What is nearshore staffing?",
+     "options": [
+         "Hiring talent from a nearby country to access skills at a lower cost",
+         "Hiring only workers who live near the company's office",
+         "Staffing a company's coastal or waterfront operations",
+         "Hiring exclusively local, in-office workers"],
+     "correct": "Hiring talent from a nearby country to access skills at a lower cost"},
+
+    {"q": "What is talent acquisition?",
+     "options": [
+         "The strategic process of identifying, attracting, and onboarding skilled professionals",
+         "Buying another company to gain its employees",
+         "Developing internal training programmes for existing staff",
+         "Automating repetitive tasks in a business"],
+     "correct": "The strategic process of identifying, attracting, and onboarding skilled professionals"},
+
+    {"q": "What is back office support?",
+     "options": [
+         "Administrative and operational tasks that keep a business running behind the scenes",
+         "IT support for a company's website and apps",
+         "Customer-facing sales and front desk services",
+         "Security and facilities management for an office"],
+     "correct": "Administrative and operational tasks that keep a business running behind the scenes"},
 ]
 
 
