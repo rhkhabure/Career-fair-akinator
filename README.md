@@ -1,7 +1,7 @@
 # 🥁 USIU Career Fair — Interactive Booth Suite
 
 > An interactive career fair booth experience for **USIU-Africa**, built with Streamlit and Supabase. Students engage through four games, win real rewards, and every interaction is logged for end-of-day auditing via a Power BI dashboard.
-> https://career-fair-akinator-2yzgvbty5yfhurjutd3nux.streamlit.app/
+
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://career-fair-akinator-2yzgvbty5yfhurjutd3nux.streamlit.app)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
